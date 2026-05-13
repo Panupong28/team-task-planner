@@ -174,7 +174,7 @@ body.dark .af-item.selected{background:#2e1f6e}
 .af-name{font-size:13px;color:var(--text);flex:1}
 .af-check{font-size:14px;color:#4f46e5;font-weight:700;opacity:0}
 .af-item.selected .af-check{opacity:1}
-.af-clear{width:100%;padding:6px 10px;margin-top:4px;border:none;border-top:1px solid var(--border);background:none;color:#dc2626;font-size:12px;font-weight:600;cursor:pointer;text-align:left;border-radius:0 0 6px 6px}
+.af-clear{width:100%;padding:6px 10px;margin-bottom:4px;border:none;border-bottom:1px solid var(--border);background:none;color:#dc2626;font-size:12px;font-weight:600;cursor:pointer;text-align:left;border-radius:6px 6px 0 0}
 .af-clear:hover{background:var(--row-hover)}
 
 /* ── Users page ── */
@@ -442,13 +442,14 @@ function populateFilters(){
 }
 function buildAssigneeDropdown(list){
   const dd=document.getElementById('assigneeFilterDropdown');
-  dd.innerHTML=list.map(a=>`
+  dd.innerHTML=
+    (filters.assignees.length?`<button class="af-clear" onclick="clearAssigneeFilter()">✕ Clear filter</button>`:'')+
+    list.map(a=>`
     <div class="af-item${filters.assignees.includes(a)?' selected':''}" onclick="toggleAssigneeFilter('${esc(a)}')">
       <div class="af-avatar" style="background:${aColor(a)}">${initials(a)}</div>
       <span class="af-name">${esc(a)}</span>
       <span class="af-check">✓</span>
-    </div>`).join('')+
-    (filters.assignees.length?`<button class="af-clear" onclick="clearAssigneeFilter()">✕ Clear filter</button>`:'');
+    </div>`).join('');
   const toggle=document.getElementById('assigneeFilterToggle');
   if(filters.assignees.length){
     toggle.classList.add('has-selection');
