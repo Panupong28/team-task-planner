@@ -24,7 +24,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 
 .header{background:var(--header-bg);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;gap:16px;height:58px;position:sticky;top:0;z-index:20;box-shadow:0 1px 4px rgba(0,0,0,.06)}
 .logo{display:flex;align-items:center}
-.logo img{height:48px;width:auto}
+.logo img{height:48px;width:auto;border-radius:8px;transition:background .2s,padding .2s}
+body.dark .logo img{background:#fff;padding:3px 6px}
 .view-switcher{display:flex;background:#f1f5f9;border-radius:8px;padding:3px;gap:2px}
 .vbtn{padding:6px 14px;border:none;background:none;cursor:pointer;border-radius:6px;font-size:13px;font-weight:500;color:var(--text2);transition:all .15s}
 .vbtn.active{background:var(--surface);color:#4f46e5;box-shadow:0 1px 3px rgba(0,0,0,.1)}
