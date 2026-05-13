@@ -11,8 +11,8 @@
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f0f2f8;color:#1e293b;min-height:100vh}
 
 .header{background:#fff;border-bottom:1px solid #e2e8f0;padding:0 24px;display:flex;align-items:center;gap:16px;height:58px;position:sticky;top:0;z-index:20;box-shadow:0 1px 4px rgba(0,0,0,.06)}
-.logo{font-size:18px;font-weight:800;color:#4f46e5;letter-spacing:-.5px;white-space:nowrap}
-.logo span{color:#a5b4fc}
+.logo{display:flex;align-items:center}
+.logo img{height:48px;width:auto}
 .view-switcher{display:flex;background:#f1f5f9;border-radius:8px;padding:3px;gap:2px}
 .vbtn{padding:6px 14px;border:none;background:none;cursor:pointer;border-radius:6px;font-size:13px;font-weight:500;color:#64748b;transition:all .15s}
 .vbtn.active{background:#fff;color:#4f46e5;box-shadow:0 1px 3px rgba(0,0,0,.1)}
@@ -147,7 +147,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <body>
 
 <div class="header">
-  <div class="logo">Task<span>Plan</span></div>
+  <div class="logo"><img src="image/logo.png" alt="Logo" style="height:48px;width:auto;display:block;"></div>
   <div class="view-switcher">
     <button class="vbtn active" onclick="setView('list')">☰ List</button>
     <button class="vbtn" onclick="setView('7day')">⬜ 7 Day</button>
