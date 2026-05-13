@@ -223,12 +223,18 @@ firebase.initializeApp({
   appId: "1:262156161902:web:5a843399a6e54be26aa77f"
 });
 const _db = firebase.database();
-async function dbLoad(){
-  const snap = await _db.ref('data').once('value');
-  return snap.val() || {tasks:[], nextId:1};
-}
 async function dbSave(data){
   await _db.ref('data').set(data);
+}
+function startRealtimeSync(){
+  _db.ref('data').on('value', snap=>{
+    if(isBusy) return;
+    const data = snap.val() || {tasks:[], nextId:1};
+    tasks = data.tasks || [];
+    nextId = data.nextId || tasks.reduce((m,t)=>Math.max(m,Number(t.id)||0),0)+1;
+    populateFilters(); render();
+    setStatus('success','Synced');setTimeout(()=>setStatus(''),1500);
+  }, e=>setStatus('error','Sync error: '+e.message));
 }
 
 // ─── Color maps ───────────────────────────────────────────────────────────────
@@ -282,17 +288,7 @@ function setStatus(type,msg){
 }
 
 // ─── Load / Save ──────────────────────────────────────────────────────────────
-async function loadTasks(){
-  setStatus('loading','Loading tasks…');
-  try{
-    const data=await dbLoad();
-    tasks=data.tasks||[];
-    nextId=data.nextId||tasks.reduce((m,t)=>Math.max(m,Number(t.id)||0),0)+1;
-    setStatus('success',`${tasks.length} tasks loaded`);
-    setTimeout(()=>setStatus(''),2000);
-    populateFilters(); render();
-  }catch(e){setStatus('error','Load failed: '+e.message);}
-}
+function loadTasks(){ startRealtimeSync(); }
 
 async function persist(){
   await dbSave({tasks, nextId});
