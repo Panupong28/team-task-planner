@@ -8,7 +8,6 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f0f2f8;color:#1e293b;min-height:100vh}
 
-/* ── Header ── */
 .header{background:#fff;border-bottom:1px solid #e2e8f0;padding:0 24px;display:flex;align-items:center;gap:16px;height:58px;position:sticky;top:0;z-index:20;box-shadow:0 1px 4px rgba(0,0,0,.06)}
 .logo{font-size:18px;font-weight:800;color:#4f46e5;letter-spacing:-.5px;white-space:nowrap}
 .logo span{color:#a5b4fc}
@@ -17,21 +16,30 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .vbtn.active{background:#fff;color:#4f46e5;box-shadow:0 1px 3px rgba(0,0,0,.1)}
 .btn-add{margin-left:auto;padding:8px 16px;background:#4f46e5;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap}
 .btn-add:hover{background:#4338ca}
+.btn-add:disabled{background:#a5b4fc;cursor:not-allowed}
 
-/* ── Filters ── */
 .filters{background:#fff;border-bottom:1px solid #e2e8f0;padding:10px 24px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;position:sticky;top:58px;z-index:10}
 .fl{font-size:12px;font-weight:600;color:#94a3b8;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
 .fsel{padding:6px 28px 6px 10px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px;color:#374151;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%2394a3b8' d='M5 6L0 0h10z'/%3E%3C/svg%3E") no-repeat right 9px center;-webkit-appearance:none;cursor:pointer;min-width:140px}
 .fsel:focus{outline:none;border-color:#4f46e5}
 .filter-sep{width:1px;height:20px;background:#e2e8f0;margin:0 4px}
 .tag-count{background:#4f46e5;color:#fff;font-size:11px;font-weight:700;padding:2px 7px;border-radius:10px;margin-left:4px}
+.refresh-btn{margin-left:auto;padding:5px 12px;border:1px solid #e2e8f0;background:#fff;border-radius:6px;font-size:12px;font-weight:600;color:#64748b;cursor:pointer}
+.refresh-btn:hover{background:#f8fafc}
 
-/* ── Main ── */
 .main{padding:20px 24px;min-height:calc(100vh - 114px)}
 
-/* ── List View ── */
+/* ── Status bar ── */
+.sbar{display:none;align-items:center;gap:8px;padding:10px 16px;border-radius:8px;font-size:13px;margin-bottom:14px}
+.sbar.loading{display:flex;background:#eff6ff;color:#2563eb}
+.sbar.error{display:flex;background:#fef2f2;color:#dc2626}
+.sbar.success{display:flex;background:#f0fdf4;color:#16a34a}
+.spinner{width:14px;height:14px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .6s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── List ── */
 .list-wrap{background:#fff;border-radius:12px;border:1px solid #e2e8f0;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.04)}
-.list-head{display:grid;grid-template-columns:minmax(180px,2.5fr) minmax(130px,1.5fr) minmax(100px,1fr) minmax(120px,1fr) minmax(120px,1fr) 90px;gap:0;background:#f8fafc;border-bottom:2px solid #e2e8f0}
+.list-head{display:grid;grid-template-columns:minmax(180px,2.5fr) minmax(130px,1.5fr) minmax(100px,1fr) minmax(120px,1fr) minmax(120px,1fr) 90px;background:#f8fafc;border-bottom:2px solid #e2e8f0}
 .lh{padding:10px 14px;font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em}
 .list-row{display:grid;grid-template-columns:minmax(180px,2.5fr) minmax(130px,1.5fr) minmax(100px,1fr) minmax(120px,1fr) minmax(120px,1fr) 90px;border-bottom:1px solid #f1f5f9;align-items:center;transition:background .1s;cursor:default}
 .list-row:last-child{border-bottom:none}
@@ -50,7 +58,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .s-review{background:#fffbeb;color:#d97706}
 .s-done{background:#f0fdf4;color:#16a34a}
 
-/* ── Calendar shared ── */
+/* ── Calendar ── */
 .cal-wrap{background:#fff;border-radius:12px;border:1px solid #e2e8f0;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.04)}
 .cal-toolbar{display:flex;align-items:center;padding:14px 20px;border-bottom:1px solid #e2e8f0;gap:12px}
 .nav-btn{width:30px;height:30px;border:1px solid #e2e8f0;background:#fff;border-radius:6px;cursor:pointer;font-size:14px;color:#64748b;display:flex;align-items:center;justify-content:center}
@@ -58,25 +66,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .cal-range{font-size:15px;font-weight:700;color:#1e293b}
 .today-btn{padding:5px 12px;border:1px solid #e2e8f0;background:#fff;border-radius:6px;font-size:12px;font-weight:600;color:#4f46e5;cursor:pointer}
 .today-btn:hover{background:#f1f5f9}
-
-/* ── 7-day View ── */
 .week-grid{overflow-x:auto}
-.week-head{display:grid;gap:0;border-bottom:2px solid #e2e8f0;background:#f8fafc}
+.week-head{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:2px solid #e2e8f0;background:#f8fafc}
 .wdh{padding:10px 8px;text-align:center;border-right:1px solid #f1f5f9}
 .wdh:last-child{border-right:none}
 .wdh .d-name{font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em}
 .wdh .d-num{font-size:22px;font-weight:800;color:#1e293b;width:38px;height:38px;display:flex;align-items:center;justify-content:center;margin:2px auto 0;border-radius:50%}
 .wdh.is-today .d-num{background:#4f46e5;color:#fff}
-.week-body{display:grid;gap:0}
+.week-body{display:grid;grid-template-columns:repeat(7,1fr)}
 .week-day-col{border-right:1px solid #f1f5f9;padding:6px;min-height:140px}
 .week-day-col:last-child{border-right:none}
 .week-day-col.is-today{background:#f5f3ff}
 .w-chip{padding:4px 7px;border-radius:5px;font-size:11px;font-weight:500;margin-bottom:3px;cursor:pointer;display:flex;align-items:center;gap:5px;transition:opacity .1s}
-.w-chip:hover{opacity:.85}
+.w-chip:hover{opacity:.8}
 .w-chip-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.w-chip-txt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
-
-/* ── Month View ── */
+.w-chip-txt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .month-dow{display:grid;grid-template-columns:repeat(7,1fr);background:#f8fafc;border-bottom:2px solid #e2e8f0}
 .mdow{padding:9px 8px;text-align:center;font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em}
 .month-grid{display:grid;grid-template-columns:repeat(7,1fr)}
@@ -88,33 +92,34 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .is-today .mnum{background:#4f46e5;color:#fff}
 .out .mnum{color:#cbd5e1}
 .m-chip{padding:2px 6px;border-radius:3px;font-size:10px;font-weight:600;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
-.m-more{font-size:10px;color:#94a3b8;padding:1px 4px;cursor:pointer}
-.m-more:hover{color:#4f46e5}
+.m-more{font-size:10px;color:#94a3b8;padding:1px 4px}
 
 /* ── Empty ── */
 .empty{text-align:center;padding:60px 20px;color:#94a3b8}
 .empty-icon{font-size:40px;margin-bottom:12px}
-.empty p{font-size:14px}
 
 /* ── Modal ── */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(2px)}
 .modal{background:#fff;border-radius:14px;padding:24px;width:500px;max-width:93vw;box-shadow:0 20px 60px rgba(0,0,0,.18)}
 .modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
 .modal-head h2{font-size:16px;font-weight:700}
-.close-btn{border:none;background:none;font-size:20px;cursor:pointer;color:#94a3b8;line-height:1}
+.close-btn{border:none;background:none;font-size:20px;cursor:pointer;color:#94a3b8}
 .fg{margin-bottom:14px}
 .fg label{display:block;font-size:12px;font-weight:600;color:#64748b;margin-bottom:5px}
 .fi{width:100%;padding:8px 12px;border:1px solid #e2e8f0;border-radius:7px;font-size:13px;color:#1e293b;font-family:inherit}
 .fi:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.1)}
 .frow{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.modal-foot{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}
+.modal-foot{display:flex;justify-content:space-between;align-items:center;margin-top:20px}
+.modal-foot-right{display:flex;gap:8px}
 .btn-cancel{padding:8px 16px;border:1px solid #e2e8f0;background:#fff;border-radius:7px;font-size:13px;cursor:pointer;font-weight:500}
-.btn-cancel:hover{background:#f8fafc}
+.btn-delete{padding:8px 16px;border:none;background:#fef2f2;color:#dc2626;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer}
+.btn-delete:hover{background:#fee2e2}
 .btn-save{padding:8px 18px;background:#4f46e5;color:#fff;border:none;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer}
 .btn-save:hover{background:#4338ca}
+.btn-save:disabled,.btn-delete:disabled{opacity:.5;cursor:not-allowed}
 
 /* ── Tooltip ── */
-.tip{position:fixed;background:#1e293b;color:#fff;padding:8px 12px;border-radius:7px;font-size:12px;z-index:200;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,.25);max-width:220px;line-height:1.5}
+.tip{position:fixed;background:#1e293b;color:#fff;padding:8px 12px;border-radius:7px;font-size:12px;z-index:200;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,.25);max-width:220px;line-height:1.6}
 .tip strong{display:block;margin-bottom:2px;font-size:13px}
 
 @media(max-width:700px){
@@ -135,23 +140,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
     <button class="vbtn" onclick="setView('7day')">⬜ 7 Day</button>
     <button class="vbtn" onclick="setView('month')">📅 Month</button>
   </div>
-  <button class="btn-add" onclick="openModal()">＋ Add Task</button>
+  <button class="btn-add" id="btnAdd" onclick="openModal()">＋ Add Task</button>
 </div>
 
 <div class="filters">
   <span class="fl">Filter</span>
-  <select class="fsel" id="fProject" onchange="applyFilters()">
-    <option value="">All Projects</option>
-  </select>
+  <select class="fsel" id="fProject" onchange="applyFilters()"><option value="">All Projects</option></select>
   <div class="filter-sep"></div>
-  <select class="fsel" id="fProcess" onchange="applyFilters()">
-    <option value="">All Processes</option>
-  </select>
+  <select class="fsel" id="fProcess" onchange="applyFilters()"><option value="">All Processes</option></select>
   <div class="filter-sep"></div>
-  <select class="fsel" id="fAssignee" onchange="applyFilters()">
-    <option value="">All Assignees</option>
-  </select>
+  <select class="fsel" id="fAssignee" onchange="applyFilters()"><option value="">All Assignees</option></select>
   <span id="resultCount" class="tag-count" style="display:none"></span>
+  <button class="refresh-btn" onclick="loadTasks()">↻ Refresh</button>
 </div>
 
 <div class="main" id="mainContent"></div>
@@ -163,39 +163,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
       <h2 id="modalTitle">Add Task</h2>
       <button class="close-btn" onclick="closeModal()">✕</button>
     </div>
-    <div class="fg">
-      <label>Task Name *</label>
-      <input class="fi" id="mName" placeholder="Enter task name…">
-    </div>
+    <div class="fg"><label>Task Name *</label><input class="fi" id="mName" placeholder="Enter task name…"></div>
     <div class="frow">
-      <div class="fg">
-        <label>Project *</label>
-        <input class="fi" id="mProject" list="projectList" placeholder="Select or type…">
-        <datalist id="projectList"></datalist>
-      </div>
-      <div class="fg">
-        <label>Process</label>
-        <input class="fi" id="mProcess" list="processList" placeholder="Select or type…">
-        <datalist id="processList"></datalist>
-      </div>
+      <div class="fg"><label>Project *</label><input class="fi" id="mProject" list="projectList" placeholder="Select or type…"><datalist id="projectList"></datalist></div>
+      <div class="fg"><label>Process</label><input class="fi" id="mProcess" list="processList" placeholder="Select or type…"><datalist id="processList"></datalist></div>
     </div>
-    <div class="fg">
-      <label>Assignee *</label>
-      <input class="fi" id="mAssignee" list="assigneeList" placeholder="Select or type…">
-      <datalist id="assigneeList"></datalist>
-    </div>
+    <div class="fg"><label>Assignee *</label><input class="fi" id="mAssignee" list="assigneeList" placeholder="Select or type…"><datalist id="assigneeList"></datalist></div>
     <div class="frow">
-      <div class="fg">
-        <label>Start Date</label>
-        <input class="fi" type="date" id="mStart">
-      </div>
-      <div class="fg">
-        <label>End Date</label>
-        <input class="fi" type="date" id="mEnd">
-      </div>
+      <div class="fg"><label>Start Date</label><input class="fi" type="date" id="mStart"></div>
+      <div class="fg"><label>End Date</label><input class="fi" type="date" id="mEnd"></div>
     </div>
-    <div class="fg">
-      <label>Status</label>
+    <div class="fg"><label>Status</label>
       <select class="fi" id="mStatus">
         <option value="todo">To Do</option>
         <option value="in-progress" selected>In Progress</option>
@@ -204,372 +182,276 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
       </select>
     </div>
     <div class="modal-foot">
-      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
-      <button class="btn-save" onclick="saveTask()">Save Task</button>
+      <div><button class="btn-delete" id="btnDelete" style="display:none" onclick="deleteTask()">🗑 Delete</button></div>
+      <div class="modal-foot-right">
+        <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+        <button class="btn-save" id="btnSave" onclick="saveTask()">Save Task</button>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- Tooltip -->
 <div class="tip" id="tooltip" style="display:none"></div>
 
 <script>
-// ─── Data ────────────────────────────────────────────────────────────────────
-let tasks = [
-  {id:1,name:"Redesign landing page hero section",project:"Website Redesign",process:"Design",assignee:"Alice",start:"2026-05-10",end:"2026-05-14",status:"in-progress"},
-  {id:2,name:"Implement user authentication",project:"Mobile App",process:"Development",assignee:"Bob",start:"2026-05-09",end:"2026-05-15",status:"in-progress"},
-  {id:3,name:"Q2 email campaign copy",project:"Marketing Campaign",process:"Content",assignee:"Carol",start:"2026-05-12",end:"2026-05-16",status:"review"},
-  {id:4,name:"REST API rate limiting",project:"Backend API",process:"Development",assignee:"David",start:"2026-05-13",end:"2026-05-19",status:"todo"},
-  {id:5,name:"User onboarding flow",project:"Mobile App",process:"Design",assignee:"Alice",start:"2026-05-15",end:"2026-05-20",status:"todo"},
-  {id:6,name:"Blog post: AI trends 2026",project:"Marketing Campaign",process:"Content",assignee:"Eve",start:"2026-05-08",end:"2026-05-12",status:"done"},
-  {id:7,name:"Database query optimisation",project:"Backend API",process:"Development",assignee:"Bob",start:"2026-05-13",end:"2026-05-17",status:"in-progress"},
-  {id:8,name:"Component library update",project:"Website Redesign",process:"Development",assignee:"David",start:"2026-05-14",end:"2026-05-18",status:"todo"},
-  {id:9,name:"Social ads creative pack",project:"Marketing Campaign",process:"Design",assignee:"Carol",start:"2026-05-16",end:"2026-05-22",status:"todo"},
-  {id:10,name:"Push notification service",project:"Mobile App",process:"Development",assignee:"Eve",start:"2026-05-11",end:"2026-05-14",status:"review"},
-  {id:11,name:"SEO audit & fixes",project:"Website Redesign",process:"QA",assignee:"Alice",start:"2026-05-19",end:"2026-05-23",status:"todo"},
-  {id:12,name:"API documentation",project:"Backend API",process:"Documentation",assignee:"Carol",start:"2026-05-07",end:"2026-05-11",status:"done"},
-  {id:13,name:"Checkout flow A/B test",project:"Website Redesign",process:"QA",assignee:"Bob",start:"2026-05-20",end:"2026-05-26",status:"todo"},
-  {id:14,name:"CI/CD pipeline setup",project:"Backend API",process:"DevOps",assignee:"David",start:"2026-05-17",end:"2026-05-21",status:"todo"},
-  {id:15,name:"App store screenshots",project:"Mobile App",process:"Design",assignee:"Eve",start:"2026-05-22",end:"2026-05-25",status:"todo"},
-];
+// ─── Storage (JSONblob) ───────────────────────────────────────────────────────
+const BLOB_URL = 'https://jsonblob.com/api/jsonBlob/019e1ff5-c124-7ada-85e9-023efddb5518';
 
-let nextId = 16;
+async function dbLoad(){
+  const r = await fetch(BLOB_URL, {headers:{Accept:'application/json'}});
+  if(!r.ok) throw new Error('HTTP '+r.status);
+  return r.json();
+}
+async function dbSave(data){
+  const r = await fetch(BLOB_URL, {
+    method:'PUT',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(data)
+  });
+  if(!r.ok) throw new Error('HTTP '+r.status);
+}
 
+// ─── Color maps ───────────────────────────────────────────────────────────────
 const PROJECT_COLORS = {
-  "Website Redesign":    {bg:"#ede9fe",text:"#6d28d9",dot:"#7c3aed"},
-  "Mobile App":          {bg:"#dbeafe",text:"#1d4ed8",dot:"#2563eb"},
-  "Marketing Campaign":  {bg:"#fce7f3",text:"#be185d",dot:"#db2777"},
-  "Backend API":         {bg:"#dcfce7",text:"#15803d",dot:"#16a34a"},
+  "Website Redesign":   {bg:"#ede9fe",text:"#6d28d9",dot:"#7c3aed"},
+  "Mobile App":         {bg:"#dbeafe",text:"#1d4ed8",dot:"#2563eb"},
+  "Marketing Campaign": {bg:"#fce7f3",text:"#be185d",dot:"#db2777"},
+  "Backend API":        {bg:"#dcfce7",text:"#15803d",dot:"#16a34a"},
 };
-const DEFAULT_COLOR = {bg:"#f1f5f9",text:"#475569",dot:"#64748b"};
-
-const ASSIGNEE_COLORS = {
-  Alice:"#f59e0b", Bob:"#2563eb", Carol:"#ec4899", David:"#10b981", Eve:"#8b5cf6"
-};
-const DEFAULT_AVATAR = "#94a3b8";
+const DEF_COLOR   = {bg:"#f1f5f9",text:"#475569",dot:"#64748b"};
+const AV_COLORS   = ["#f59e0b","#2563eb","#ec4899","#10b981","#8b5cf6","#f97316","#06b6d4","#84cc16"];
+const avatarMap   = {}; let avIdx=0;
 
 const STATUS_CLASS = {todo:"s-todo","in-progress":"s-progress",review:"s-review",done:"s-done"};
 const STATUS_LABEL = {todo:"To Do","in-progress":"In Progress",review:"In Review",done:"Done"};
 
 // ─── State ────────────────────────────────────────────────────────────────────
-let currentView = 'list';
-let weekStart = getWeekStart(new Date());
-let monthDate = new Date(2026,4,1); // May 2026
-let filters = {project:'',process:'',assignee:''};
-let editId = null;
+let tasks=[], nextId=1, currentView='list';
+let weekStart=getWeekStart(new Date('2026-05-13'));
+let monthDate=new Date(2026,4,1);
+let filters={project:'',process:'',assignee:''};
+let editId=null, isBusy=false;
+const TODAY='2026-05-13';
 
-const TODAY = "2026-05-13";
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+function pColor(p){return PROJECT_COLORS[p]||DEF_COLOR;}
+function aColor(n){if(!avatarMap[n]){avatarMap[n]=AV_COLORS[avIdx%AV_COLORS.length];avIdx++;}return avatarMap[n];}
+function initials(n){return String(n).split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);}
+function fmtDate(iso){if(!iso)return'';const[y,m,d]=iso.split('-');return`${d}/${m}/${y.slice(2)}`;}
+function fmtShort(iso){if(!iso)return'';const mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];const[,m,d]=iso.split('-');return`${parseInt(d)} ${mo[parseInt(m)-1]}`;}
+function isoDate(d){return d.toISOString().slice(0,10);}
+function addDays(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r;}
+function getWeekStart(d){const r=new Date(d);r.setDate(r.getDate()-r.getDay());return r;}
+function inDay(t,iso){return iso>=(t.start||iso)&&iso<=(t.end||iso);}
+function filtered(){return tasks.filter(t=>(!filters.project||t.project===filters.project)&&(!filters.process||t.process===filters.process)&&(!filters.assignee||t.assignee===filters.assignee));}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
-function pColor(proj){ return PROJECT_COLORS[proj] || DEFAULT_COLOR; }
-function aColor(name){ return ASSIGNEE_COLORS[name] || DEFAULT_AVATAR; }
-function initials(name){ return name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2); }
-
-function fmtDate(iso){
-  if(!iso) return '';
-  const [y,m,d] = iso.split('-');
-  return `${d}/${m}/${y.slice(2)}`;
-}
-function fmtDateShort(iso){
-  if(!iso) return '';
-  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const [,m,d] = iso.split('-');
-  return `${parseInt(d)} ${months[parseInt(m)-1]}`;
-}
-
-function isoDate(d){ return d.toISOString().slice(0,10); }
-function addDays(d,n){ const r=new Date(d); r.setDate(r.getDate()+n); return r; }
-
-function getWeekStart(d){
-  const r = new Date(d);
-  const day = r.getDay(); // 0=Sun
-  r.setDate(r.getDate() - day);
-  return r;
+// ─── Status bar ───────────────────────────────────────────────────────────────
+function setStatus(type,msg){
+  const el=document.getElementById('sbar');if(!el)return;
+  if(!type){el.className='sbar';return;}
+  el.className='sbar '+type;
+  el.innerHTML=(type==='loading'?'<div class="spinner"></div>':type==='error'?'⚠️':'✓')+` <span>${esc(msg)}</span>`;
 }
 
-function taskInDay(t, iso){
-  if(!t.start && !t.end) return false;
-  const s = t.start || iso;
-  const e = t.end || iso;
-  return iso >= s && iso <= e;
+// ─── Load / Save ──────────────────────────────────────────────────────────────
+async function loadTasks(){
+  setStatus('loading','Loading tasks…');
+  try{
+    const data=await dbLoad();
+    tasks=data.tasks||[];
+    nextId=data.nextId||tasks.reduce((m,t)=>Math.max(m,Number(t.id)||0),0)+1;
+    setStatus('success',`${tasks.length} tasks loaded`);
+    setTimeout(()=>setStatus(''),2000);
+    populateFilters(); render();
+  }catch(e){setStatus('error','Load failed: '+e.message);}
 }
 
-function getFilteredTasks(){
-  return tasks.filter(t =>
-    (!filters.project  || t.project  === filters.project)  &&
-    (!filters.process  || t.process  === filters.process)  &&
-    (!filters.assignee || t.assignee === filters.assignee)
-  );
+async function persist(){
+  await dbSave({tasks, nextId});
 }
 
-// ─── View switching ───────────────────────────────────────────────────────────
+// ─── Views ────────────────────────────────────────────────────────────────────
 function setView(v){
-  currentView = v;
-  document.querySelectorAll('.vbtn').forEach((b,i)=>{
-    b.classList.toggle('active', ['list','7day','month'][i] === v);
-  });
+  currentView=v;
+  document.querySelectorAll('.vbtn').forEach((b,i)=>b.classList.toggle('active',['list','7day','month'][i]===v));
   render();
 }
-
 function applyFilters(){
-  filters.project  = document.getElementById('fProject').value;
-  filters.process  = document.getElementById('fProcess').value;
-  filters.assignee = document.getElementById('fAssignee').value;
+  filters.project=document.getElementById('fProject').value;
+  filters.process=document.getElementById('fProcess').value;
+  filters.assignee=document.getElementById('fAssignee').value;
   render();
 }
-
 function populateFilters(){
-  const projects  = [...new Set(tasks.map(t=>t.project))].sort();
-  const processes = [...new Set(tasks.map(t=>t.process))].sort();
-  const assignees = [...new Set(tasks.map(t=>t.assignee))].sort();
-
-  const fp = document.getElementById('fProject');
-  const fc = document.getElementById('fProcess');
-  const fa = document.getElementById('fAssignee');
-
-  const curP = fp.value, curC = fc.value, curA = fa.value;
-
-  fp.innerHTML = '<option value="">All Projects</option>' + projects.map(p=>`<option value="${p}"${p===curP?' selected':''}>${p}</option>`).join('');
-  fc.innerHTML = '<option value="">All Processes</option>' + processes.map(p=>`<option value="${p}"${p===curC?' selected':''}>${p}</option>`).join('');
-  fa.innerHTML = '<option value="">All Assignees</option>' + assignees.map(a=>`<option value="${a}"${a===curA?' selected':''}>${a}</option>`).join('');
-
-  // datalists for modal
-  document.getElementById('projectList').innerHTML  = projects.map(p=>`<option value="${p}">`).join('');
-  document.getElementById('processList').innerHTML  = processes.map(p=>`<option value="${p}">`).join('');
-  document.getElementById('assigneeList').innerHTML = assignees.map(a=>`<option value="${a}">`).join('');
+  const P=[...new Set(tasks.map(t=>t.project))].sort();
+  const C=[...new Set(tasks.map(t=>t.process))].sort();
+  const A=[...new Set(tasks.map(t=>t.assignee))].sort();
+  const fp=document.getElementById('fProject'),fc=document.getElementById('fProcess'),fa=document.getElementById('fAssignee');
+  const cp=fp.value,cc=fc.value,ca=fa.value;
+  fp.innerHTML='<option value="">All Projects</option>'+P.map(p=>`<option value="${esc(p)}"${p===cp?' selected':''}>${esc(p)}</option>`).join('');
+  fc.innerHTML='<option value="">All Processes</option>'+C.map(p=>`<option value="${esc(p)}"${p===cc?' selected':''}>${esc(p)}</option>`).join('');
+  fa.innerHTML='<option value="">All Assignees</option>'+A.map(a=>`<option value="${esc(a)}"${a===ca?' selected':''}>${esc(a)}</option>`).join('');
+  document.getElementById('projectList').innerHTML=P.map(p=>`<option value="${esc(p)}">`).join('');
+  document.getElementById('processList').innerHTML=C.map(p=>`<option value="${esc(p)}">`).join('');
+  document.getElementById('assigneeList').innerHTML=A.map(a=>`<option value="${esc(a)}">`).join('');
 }
 
 // ─── Render ───────────────────────────────────────────────────────────────────
 function render(){
-  const ft = getFilteredTasks();
-  const cnt = document.getElementById('resultCount');
-  if(filters.project || filters.process || filters.assignee){
-    cnt.style.display='inline'; cnt.textContent = ft.length;
-  } else { cnt.style.display='none'; }
-
-  const main = document.getElementById('mainContent');
-  if(currentView==='list')  main.innerHTML = renderList(ft);
-  if(currentView==='7day')  main.innerHTML = render7Day(ft);
-  if(currentView==='month') main.innerHTML = renderMonth(ft);
+  const ft=filtered();
+  const cnt=document.getElementById('resultCount');
+  if(filters.project||filters.process||filters.assignee){cnt.style.display='inline';cnt.textContent=ft.length;}
+  else cnt.style.display='none';
+  const main=document.getElementById('mainContent');
+  let html='<div id="sbar" class="sbar"></div>';
+  if(currentView==='list')  html+=renderList(ft);
+  if(currentView==='7day')  html+=render7Day(ft);
+  if(currentView==='month') html+=renderMonth(ft);
+  main.innerHTML=html;
 }
 
-// ── List View ─────────────────────────────────────────────────────────────────
+// ── List ──────────────────────────────────────────────────────────────────────
 function renderList(ft){
-  if(!ft.length) return emptyState('No tasks match your filters');
-  const rows = ft.map(t=>{
-    const pc = pColor(t.project);
-    const ac = aColor(t.assignee);
-    const sc = STATUS_CLASS[t.status]||'s-todo';
-    const sl = STATUS_LABEL[t.status]||t.status;
-    const dateStr = (t.start && t.end && t.start!==t.end)
-      ? `${fmtDate(t.start)} – ${fmtDate(t.end)}`
-      : fmtDate(t.start||t.end||'');
-    return `<div class="list-row" ondblclick="openModal(${t.id})">
-      <div class="lc"><div class="task-name-text">${esc(t.name)}</div></div>
-      <div class="lc"><span class="badge" style="background:${pc.bg};color:${pc.text}">${esc(t.project)}</span></div>
-      <div class="lc"><span class="badge proc-badge">${esc(t.process)}</span></div>
-      <div class="lc">
-        <div class="assignee-cell">
-          <div class="avatar" style="background:${ac}">${initials(t.assignee)}</div>
-          <span class="assignee-name">${esc(t.assignee)}</span>
-        </div>
-      </div>
-      <div class="lc"><span class="date-txt">${dateStr}</span></div>
-      <div class="lc"><span class="status-badge ${sc}">${sl}</span></div>
-    </div>`;
-  }).join('');
-
+  if(!ft.length) return `<div class="empty"><div class="empty-icon">📋</div><p>${tasks.length?'No tasks match filters':'No tasks yet — click + Add Task'}</p></div>`;
   return `<div class="list-wrap">
     <div class="list-head">
-      <div class="lh">Task Name</div>
-      <div class="lh">Project</div>
-      <div class="lh">Process</div>
-      <div class="lh">Assignee</div>
-      <div class="lh">Date</div>
-      <div class="lh">Status</div>
-    </div>
-    ${rows}
-  </div>`;
+      <div class="lh">Task Name</div><div class="lh">Project</div><div class="lh">Process</div>
+      <div class="lh">Assignee</div><div class="lh">Date</div><div class="lh">Status</div>
+    </div>${ft.map(t=>{
+      const pc=pColor(t.project),sc=STATUS_CLASS[t.status]||'s-todo',sl=STATUS_LABEL[t.status]||t.status;
+      const dt=(t.start&&t.end&&t.start!==t.end)?`${fmtDate(t.start)} – ${fmtDate(t.end)}`:fmtDate(t.start||t.end||'');
+      return `<div class="list-row" ondblclick="openModal(${t.id})">
+        <div class="lc"><div class="task-name-text">${esc(t.name)}</div></div>
+        <div class="lc"><span class="badge" style="background:${pc.bg};color:${pc.text}">${esc(t.project)}</span></div>
+        <div class="lc"><span class="badge proc-badge">${esc(t.process)}</span></div>
+        <div class="lc"><div class="assignee-cell"><div class="avatar" style="background:${aColor(t.assignee)}">${initials(t.assignee)}</div><span class="assignee-name">${esc(t.assignee)}</span></div></div>
+        <div class="lc"><span class="date-txt">${dt}</span></div>
+        <div class="lc"><span class="status-badge ${sc}">${sl}</span></div>
+      </div>`;
+    }).join('')}</div>`;
 }
 
-// ── 7-Day View ────────────────────────────────────────────────────────────────
+// ── 7-Day ─────────────────────────────────────────────────────────────────────
 function render7Day(ft){
-  const days = Array.from({length:7}, (_,i)=> addDays(weekStart,i));
-  const dayISOs = days.map(isoDate);
-
-  const rangeLabel = `${fmtDateShort(dayISOs[0])} – ${fmtDateShort(dayISOs[6])} ${days[0].getFullYear()}`;
-
-  const headers = `<div class="week-head" style="display:grid;grid-template-columns:repeat(7,1fr)">` +
-    days.map(d=>{
-      const iso = isoDate(d);
-      const isToday = iso===TODAY;
-      return `<div class="wdh${isToday?' is-today':''}">
-        <div class="d-name">${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()]}</div>
-        <div class="d-num">${d.getDate()}</div>
-      </div>`;
-    }).join('') + '</div>';
-
-  const cols = dayISOs.map(iso=>{
-    const isToday = iso===TODAY;
-    const dayTasks = ft.filter(t=>taskInDay(t,iso));
-    const chips = dayTasks.map(t=>{
-      const pc = pColor(t.project);
-      const ac = aColor(t.assignee);
-      return `<div class="w-chip" style="background:${pc.bg};color:${pc.text}"
-        onmouseenter="showTip(event,${t.id})" onmouseleave="hideTip()" onclick="openModal(${t.id})">
-        <div class="w-chip-dot" style="background:${pc.dot}"></div>
-        <div class="w-chip-txt">${esc(t.name)}</div>
-      </div>`;
-    }).join('');
-    return `<div class="week-day-col${isToday?' is-today':''}">${chips||''}</div>`;
+  const days=Array.from({length:7},(_,i)=>addDays(weekStart,i));
+  const isos=days.map(isoDate);
+  const label=`${fmtShort(isos[0])} – ${fmtShort(isos[6])} ${days[0].getFullYear()}`;
+  const heads=days.map(d=>{const iso=isoDate(d),tod=iso===TODAY;
+    return`<div class="wdh${tod?' is-today':''}"><div class="d-name">${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()]}</div><div class="d-num">${d.getDate()}</div></div>`;
   }).join('');
-
-  return `<div class="cal-wrap">
-    <div class="cal-toolbar">
-      <button class="nav-btn" onclick="weekNav(-1)">‹</button>
-      <button class="nav-btn" onclick="weekNav(1)">›</button>
-      <span class="cal-range">${rangeLabel}</span>
-      <button class="today-btn" onclick="goToday()">Today</button>
-    </div>
-    <div class="week-grid">
-      ${headers}
-      <div style="display:grid;grid-template-columns:repeat(7,1fr)">${cols}</div>
-    </div>
-  </div>`;
+  const cols=isos.map(iso=>{const tod=iso===TODAY;
+    return`<div class="week-day-col${tod?' is-today':''}">${ft.filter(t=>inDay(t,iso)).map(t=>{const pc=pColor(t.project);
+      return`<div class="w-chip" style="background:${pc.bg};color:${pc.text}" onmouseenter="showTip(event,${t.id})" onmouseleave="hideTip()" onclick="openModal(${t.id})"><div class="w-chip-dot" style="background:${pc.dot}"></div><div class="w-chip-txt">${esc(t.name)}</div></div>`;
+    }).join('')}</div>`;
+  }).join('');
+  return`<div class="cal-wrap"><div class="cal-toolbar">
+    <button class="nav-btn" onclick="weekNav(-1)">‹</button><button class="nav-btn" onclick="weekNav(1)">›</button>
+    <span class="cal-range">${label}</span><button class="today-btn" onclick="goToday()">Today</button>
+  </div><div class="week-grid"><div class="week-head">${heads}</div><div class="week-body">${cols}</div></div></div>`;
 }
 
-// ── Month View ────────────────────────────────────────────────────────────────
+// ── Month ─────────────────────────────────────────────────────────────────────
 function renderMonth(ft){
-  const y = monthDate.getFullYear(), m = monthDate.getMonth();
-  const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
-
-  const firstDay = new Date(y,m,1).getDay();
-  const lastDate = new Date(y,m+1,0).getDate();
-
-  let cells = [];
-  for(let i=0;i<firstDay;i++){
-    const d = new Date(y,m,1-firstDay+i);
-    cells.push({date:d, iso:isoDate(d), out:true});
-  }
-  for(let d=1;d<=lastDate;d++){
-    const dt = new Date(y,m,d);
-    cells.push({date:dt, iso:isoDate(dt), out:false});
-  }
-  while(cells.length%7!==0){
-    const d = new Date(y,m+1,cells.length-firstDay-lastDate+1);
-    cells.push({date:d, iso:isoDate(d), out:true});
-  }
-
-  const dow = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d=>`<div class="mdow">${d}</div>`).join('');
-
-  const cellsHtml = cells.map(c=>{
-    const isToday = c.iso===TODAY;
-    const dayTasks = ft.filter(t=>taskInDay(t,c.iso));
-    const max = 3;
-    const chips = dayTasks.slice(0,max).map(t=>{
-      const pc = pColor(t.project);
-      return `<div class="m-chip" style="background:${pc.bg};color:${pc.text}"
-        onmouseenter="showTip(event,${t.id})" onmouseleave="hideTip()" onclick="openModal(${t.id})">${esc(t.name)}</div>`;
-    }).join('');
-    const more = dayTasks.length>max ? `<div class="m-more">+${dayTasks.length-max} more</div>` : '';
-    return `<div class="mday${c.out?' out':''}${isToday?' is-today':''}">
-      <div class="mnum">${c.date.getDate()}</div>
-      ${chips}${more}
-    </div>`;
+  const y=monthDate.getFullYear(),m=monthDate.getMonth();
+  const MN=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const fd=new Date(y,m,1).getDay(),ld=new Date(y,m+1,0).getDate();
+  let cells=[];
+  for(let i=0;i<fd;i++){const d=new Date(y,m,1-fd+i);cells.push({date:d,iso:isoDate(d),out:true});}
+  for(let d=1;d<=ld;d++){const dt=new Date(y,m,d);cells.push({date:dt,iso:isoDate(dt),out:false});}
+  while(cells.length%7){const d=new Date(y,m+1,cells.length-fd-ld+1);cells.push({date:d,iso:isoDate(d),out:true});}
+  const dow=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d=>`<div class="mdow">${d}</div>`).join('');
+  const chtml=cells.map(c=>{const tod=c.iso===TODAY,dt=ft.filter(t=>inDay(t,c.iso)),max=3;
+    return`<div class="mday${c.out?' out':''}${tod?' is-today':''}"><div class="mnum">${c.date.getDate()}</div>
+      ${dt.slice(0,max).map(t=>{const pc=pColor(t.project);return`<div class="m-chip" style="background:${pc.bg};color:${pc.text}" onmouseenter="showTip(event,${t.id})" onmouseleave="hideTip()" onclick="openModal(${t.id})">${esc(t.name)}</div>`;}).join('')}
+      ${dt.length>max?`<div class="m-more">+${dt.length-max} more</div>`:''}</div>`;
   }).join('');
-
-  return `<div class="cal-wrap">
-    <div class="cal-toolbar">
-      <button class="nav-btn" onclick="monthNav(-1)">‹</button>
-      <button class="nav-btn" onclick="monthNav(1)">›</button>
-      <span class="cal-range">${months[m]} ${y}</span>
-      <button class="today-btn" onclick="goToday()">Today</button>
-    </div>
-    <div class="month-dow">${dow}</div>
-    <div class="month-grid">${cellsHtml}</div>
-  </div>`;
+  return`<div class="cal-wrap"><div class="cal-toolbar">
+    <button class="nav-btn" onclick="monthNav(-1)">‹</button><button class="nav-btn" onclick="monthNav(1)">›</button>
+    <span class="cal-range">${MN[m]} ${y}</span><button class="today-btn" onclick="goToday()">Today</button>
+  </div><div class="month-dow">${dow}</div><div class="month-grid">${chtml}</div></div>`;
 }
 
 // ─── Navigation ───────────────────────────────────────────────────────────────
-function weekNav(dir){ weekStart = addDays(weekStart, dir*7); render(); }
-function monthNav(dir){ monthDate = new Date(monthDate.getFullYear(), monthDate.getMonth()+dir, 1); render(); }
-function goToday(){
-  weekStart = getWeekStart(new Date(TODAY));
-  monthDate = new Date(2026,4,1);
-  render();
-}
+function weekNav(d){weekStart=addDays(weekStart,d*7);render();}
+function monthNav(d){monthDate=new Date(monthDate.getFullYear(),monthDate.getMonth()+d,1);render();}
+function goToday(){weekStart=getWeekStart(new Date(TODAY));monthDate=new Date(2026,4,1);render();}
 
-// ─── Tooltip ──────────────────────────────────────────────────────────────────
-function showTip(e, id){
-  const t = tasks.find(x=>x.id===id); if(!t) return;
-  const tip = document.getElementById('tooltip');
-  const dateStr = (t.start && t.end) ? `${fmtDate(t.start)} – ${fmtDate(t.end)}` : fmtDate(t.start||t.end||'');
-  tip.innerHTML = `<strong>${esc(t.name)}</strong>
-    ${esc(t.project)} · ${esc(t.process)}<br>
-    👤 ${esc(t.assignee)}<br>
-    📅 ${dateStr}<br>
-    ${STATUS_LABEL[t.status]||t.status}`;
-  tip.style.display='block';
-  moveTip(e);
+// ─── Tooltip ─────────────────────────────────────────────────────────────────
+function showTip(e,id){
+  const t=tasks.find(x=>x.id===id);if(!t)return;
+  const tip=document.getElementById('tooltip');
+  const dt=(t.start&&t.end)?`${fmtDate(t.start)} – ${fmtDate(t.end)}`:fmtDate(t.start||t.end||'');
+  tip.innerHTML=`<strong>${esc(t.name)}</strong>${esc(t.project)} · ${esc(t.process)}<br>👤 ${esc(t.assignee)}<br>📅 ${dt}<br>${STATUS_LABEL[t.status]||t.status}`;
+  tip.style.display='block';moveTip(e);
 }
-function moveTip(e){
-  const tip = document.getElementById('tooltip');
-  tip.style.left = (e.clientX+14)+'px';
-  tip.style.top  = (e.clientY+14)+'px';
-}
-document.addEventListener('mousemove', e=>{ const tip=document.getElementById('tooltip'); if(tip.style.display!=='none') moveTip(e); });
-function hideTip(){ document.getElementById('tooltip').style.display='none'; }
+document.addEventListener('mousemove',e=>{const t=document.getElementById('tooltip');if(t.style.display!=='none')moveTip(e);});
+function moveTip(e){const t=document.getElementById('tooltip');t.style.left=(e.clientX+14)+'px';t.style.top=(e.clientY+14)+'px';}
+function hideTip(){document.getElementById('tooltip').style.display='none';}
 
 // ─── Modal ────────────────────────────────────────────────────────────────────
 function openModal(id){
-  editId = id||null;
-  document.getElementById('modalTitle').textContent = id ? 'Edit Task' : 'Add Task';
-  const t = id ? tasks.find(x=>x.id===id) : null;
-  document.getElementById('mName').value    = t?.name    ||'';
-  document.getElementById('mProject').value = t?.project ||'';
-  document.getElementById('mProcess').value = t?.process ||'';
-  document.getElementById('mAssignee').value= t?.assignee||'';
-  document.getElementById('mStart').value   = t?.start   ||'';
-  document.getElementById('mEnd').value     = t?.end     ||'';
-  document.getElementById('mStatus').value  = t?.status  ||'in-progress';
+  editId=id||null;
+  document.getElementById('modalTitle').textContent=id?'Edit Task':'Add Task';
+  const t=id?tasks.find(x=>x.id===id):null;
+  document.getElementById('mName').value=t?.name||'';
+  document.getElementById('mProject').value=t?.project||'';
+  document.getElementById('mProcess').value=t?.process||'';
+  document.getElementById('mAssignee').value=t?.assignee||'';
+  document.getElementById('mStart').value=t?.start||'';
+  document.getElementById('mEnd').value=t?.end||'';
+  document.getElementById('mStatus').value=t?.status||'in-progress';
+  document.getElementById('btnDelete').style.display=id?'block':'none';
   document.getElementById('modalOverlay').style.display='flex';
-  document.getElementById('mName').focus();
+  setTimeout(()=>document.getElementById('mName').focus(),50);
 }
-function closeModal(){ document.getElementById('modalOverlay').style.display='none'; editId=null; }
-function overlayClick(e){ if(e.target.id==='modalOverlay') closeModal(); }
+function closeModal(){document.getElementById('modalOverlay').style.display='none';editId=null;}
+function overlayClick(e){if(e.target.id==='modalOverlay')closeModal();}
 
-function saveTask(){
-  const name = document.getElementById('mName').value.trim();
-  const project = document.getElementById('mProject').value.trim();
-  const assignee = document.getElementById('mAssignee').value.trim();
-  if(!name||!project||!assignee){ alert('Task name, project and assignee are required.'); return; }
-  const data = {
-    name, project, assignee,
-    process:  document.getElementById('mProcess').value.trim()||'General',
-    start:    document.getElementById('mStart').value,
-    end:      document.getElementById('mEnd').value,
-    status:   document.getElementById('mStatus').value,
+async function saveTask(){
+  const name=document.getElementById('mName').value.trim();
+  const project=document.getElementById('mProject').value.trim();
+  const assignee=document.getElementById('mAssignee').value.trim();
+  if(!name||!project||!assignee){alert('Task name, project and assignee are required.');return;}
+  const task={
+    id:editId||nextId,name,project,assignee,
+    process:document.getElementById('mProcess').value.trim()||'General',
+    start:document.getElementById('mStart').value,
+    end:document.getElementById('mEnd').value,
+    status:document.getElementById('mStatus').value,
   };
-  if(editId){
-    const idx = tasks.findIndex(t=>t.id===editId);
-    if(idx>-1) tasks[idx] = {...tasks[idx],...data};
-  } else {
-    tasks.push({id:nextId++,...data});
-  }
-  closeModal();
-  populateFilters();
-  render();
+  setBusy(true);
+  try{
+    if(editId){const i=tasks.findIndex(t=>t.id===editId);if(i>-1)tasks[i]=task;}
+    else{tasks.push(task);nextId++;}
+    await persist();
+    closeModal();populateFilters();render();
+    setStatus('success','Saved ✓');setTimeout(()=>setStatus(''),2000);
+  }catch(e){setStatus('error','Save failed: '+e.message);}
+  finally{setBusy(false);}
 }
 
-// ─── Utilities ────────────────────────────────────────────────────────────────
-function emptyState(msg){
-  return `<div class="empty"><div class="empty-icon">📋</div><p>${msg}</p></div>`;
+async function deleteTask(){
+  if(!editId||!confirm('Delete this task?'))return;
+  setBusy(true);
+  try{
+    tasks=tasks.filter(t=>t.id!==editId);
+    await persist();
+    closeModal();populateFilters();render();
+    setStatus('success','Deleted ✓');setTimeout(()=>setStatus(''),2000);
+  }catch(e){setStatus('error','Delete failed: '+e.message);}
+  finally{setBusy(false);}
 }
-function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function setBusy(on){
+  isBusy=on;
+  document.getElementById('btnSave').disabled=on;
+  document.getElementById('btnSave').textContent=on?'Saving…':'Save Task';
+  const bd=document.getElementById('btnDelete');if(bd)bd.disabled=on;
+}
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
-populateFilters();
-render();
+loadTasks();
 </script>
 </body>
 </html>
