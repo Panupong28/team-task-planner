@@ -380,11 +380,11 @@ const STATUS_LABEL = {todo:"To Do","in-progress":"In Progress",review:"In Review
 
 // ─── State ────────────────────────────────────────────────────────────────────
 let tasks=[], users=[], nextId=1, currentView='list';
-let weekStart=getWeekStart(new Date('2026-05-13'));
-let monthDate=new Date(2026,4,1);
+const TODAY=new Date().toISOString().slice(0,10);
+let weekStart=getWeekStart(new Date());
+let monthDate=new Date(new Date().getFullYear(),new Date().getMonth(),1);
 let filters={project:'',process:'',assignees:[]};
 let editId=null, isBusy=false;
-const TODAY='2026-05-13';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 function pColor(p){if(!p)return PROJECT_PALETTE[0];if(!projectColorMap[p]){projectColorMap[p]=PROJECT_PALETTE[projIdx%PROJECT_PALETTE.length];projIdx++;}return projectColorMap[p];}
@@ -539,7 +539,7 @@ function renderMonth(ft){
 // ─── Navigation ───────────────────────────────────────────────────────────────
 function weekNav(d){weekStart=addDays(weekStart,d*7);render();}
 function monthNav(d){monthDate=new Date(monthDate.getFullYear(),monthDate.getMonth()+d,1);render();}
-function goToday(){weekStart=getWeekStart(new Date(TODAY));monthDate=new Date(2026,4,1);render();}
+function goToday(){const n=new Date();weekStart=getWeekStart(n);monthDate=new Date(n.getFullYear(),n.getMonth(),1);render();}
 
 // ─── Tooltip ─────────────────────────────────────────────────────────────────
 function showTip(e,id){
