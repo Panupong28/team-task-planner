@@ -137,6 +137,7 @@ body.dark .logo img{background:#fff;padding:3px 6px}
 .wl-assignee-name{font-size:13px;font-weight:600;color:var(--text);line-height:1.3}
 .wl-assignee-count{font-size:11px;color:var(--text3);margin-top:2px}
 .wl-cell{padding:6px;border-right:1px solid var(--border);min-height:80px}
+.wl-cell.wl-cell-empty{min-height:32px}
 .wl-cell:last-child{border-right:none}
 .wl-cell.is-today{background:var(--today-bg)}
 .wl-empty{text-align:center;padding:40px 20px;color:var(--text3);font-size:13px}
@@ -580,19 +581,20 @@ function renderWorkload(ft){
   const rows=assigneeSet.map(name=>{
     const myTasks=ft.filter(t=>getAssignees(t).includes(name));
     const weekCount=myTasks.filter(t=>isos.some(iso=>inDay(t,iso))).length;
+    const hasWeekTasks=weekCount>0;
     const cells=isos.map(iso=>{const tod=iso===TODAY;
       const dayTasks=myTasks.filter(t=>inDay(t,iso));
-      return`<div class="wl-cell${tod?' is-today':''}">${dayTasks.map(t=>{const pc=pColor(t.project);
+      return`<div class="wl-cell${tod?' is-today':''}${hasWeekTasks?'':' wl-cell-empty'}">${dayTasks.map(t=>{const pc=pColor(t.project);
         return`<div class="w-chip" style="background:${pc.bg};color:${pc.text}" onmouseenter="showTip(event,${t.id})" onmouseleave="hideTip()" onclick="openModal(${t.id})">
           <div class="w-chip-name">${esc(t.name)}</div>
           <div class="w-chip-project">${esc(t.project)}</div>
         </div>`;
       }).join('')}</div>`;
     }).join('');
-    return`<div class="wl-row">
-      <div class="wl-assignee">
-        <div class="avatar" style="background:${aColor(name)}">${initials(name)}</div>
-        <div><div class="wl-assignee-name">${esc(name)}</div><div class="wl-assignee-count">${weekCount} task${weekCount!==1?'s':''} this week</div></div>
+    return`<div class="wl-row${hasWeekTasks?'':' wl-row-empty'}">
+      <div class="wl-assignee${hasWeekTasks?'':' wl-cell-empty'}">
+        <div class="avatar" style="background:${aColor(name)};${hasWeekTasks?'':'width:22px;height:22px;font-size:9px'}">${initials(name)}</div>
+        <div><div class="wl-assignee-name">${esc(name)}</div>${hasWeekTasks?`<div class="wl-assignee-count">${weekCount} task${weekCount!==1?'s':''} this week</div>`:''}</div>
       </div>${cells}
     </div>`;
   }).join('');
