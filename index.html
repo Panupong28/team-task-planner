@@ -574,6 +574,14 @@ function renderWorkload(ft){
     <span class="cal-range">${label}</span><button class="today-btn" onclick="goToday()">Today</button>
   </div><div class="wl-empty">No assignees yet — add users or create tasks with assignees.</div></div>`;
 
+  // sort: assignees with tasks this week first, then those without
+  assigneeSet.sort((a,b)=>{
+    const ac=ft.filter(t=>getAssignees(t).includes(a)).filter(t=>isos.some(iso=>inDay(t,iso))).length;
+    const bc=ft.filter(t=>getAssignees(t).includes(b)).filter(t=>isos.some(iso=>inDay(t,iso))).length;
+    if((ac>0)===(bc>0)) return a.localeCompare(b);
+    return ac>0?-1:1;
+  });
+
   const dayHeads=days.map(d=>{const iso=isoDate(d),tod=iso===TODAY;
     return`<div class="wl-day-head${tod?' is-today':''}"><div class="d-name">${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()]}</div><div class="d-num">${d.getDate()}</div></div>`;
   }).join('');
