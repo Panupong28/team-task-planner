@@ -949,7 +949,7 @@ _auth.onAuthStateChanged(user=>{
     document.body.classList.remove('logged-out');
     const av=document.getElementById('userAvatarEl');
     if(user.photoURL){
-      av.innerHTML=`<img src="${user.photoURL}" class="user-avatar" onclick="toggleUserMenu()">`;
+      av.innerHTML=`<img src="${user.photoURL}" class="user-avatar" referrerpolicy="no-referrer">`;
       av.style.background='none';
     } else {
       av.textContent=user.displayName?user.displayName[0].toUpperCase():'?';
