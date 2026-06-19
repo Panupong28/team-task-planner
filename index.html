@@ -343,6 +343,14 @@ body.dark .login-logo{background:#fff;padding:4px 8px}
   <div class="filter-sep"></div>
   <select class="fsel" id="fProcess" onchange="applyFilters()"><option value="">All Processes</option></select>
   <div class="filter-sep"></div>
+  <select class="fsel" id="fStatus" onchange="applyFilters()">
+    <option value="">All Status</option>
+    <option value="todo">To Do</option>
+    <option value="in-progress">In Progress</option>
+    <option value="review">In Review</option>
+    <option value="done">Done</option>
+  </select>
+  <div class="filter-sep"></div>
   <div class="assignee-filter-wrap" id="assigneeFilterWrap">
     <button class="assignee-filter-toggle" id="assigneeFilterToggle" onclick="toggleAssigneeDropdown()">
       <span id="assigneeFilterLabel">All Assignees</span> <span class="af-arrow">▾</span>
@@ -472,7 +480,7 @@ let tasks=[], users=[], nextId=1, currentView='list';
 const TODAY=(()=>{const d=new Date();const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return`${y}-${m}-${day}`;})();
 let weekStart=getWeekStart(new Date());
 let monthDate=new Date(new Date().getFullYear(),new Date().getMonth(),1);
-let filters={project:'',process:'',assignees:[]};
+let filters={project:'',process:'',status:'',assignees:[]};
 let editId=null, isBusy=false;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -486,7 +494,7 @@ function addDays(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r;}
 function getWeekStart(d){const r=new Date(d);r.setDate(r.getDate()-r.getDay());return r;}
 function inDay(t,iso){return iso>=(t.start||iso)&&iso<=(t.end||iso);}
 function getAssignees(t){return Array.isArray(t.assignees)?t.assignees:(t.assignee?[t.assignee]:[]);}
-function filtered(){return tasks.filter(t=>(!filters.project||t.project===filters.project)&&(!filters.process||t.process===filters.process)&&(!filters.assignees.length||getAssignees(t).some(a=>filters.assignees.includes(a))));}
+function filtered(){return tasks.filter(t=>(!filters.project||t.project===filters.project)&&(!filters.process||t.process===filters.process)&&(!filters.status||t.status===filters.status)&&(!filters.assignees.length||getAssignees(t).some(a=>filters.assignees.includes(a))));}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
 // ─── Status bar ───────────────────────────────────────────────────────────────
@@ -513,6 +521,7 @@ function setView(v){
 function applyFilters(){
   filters.project=document.getElementById('fProject').value;
   filters.process=document.getElementById('fProcess').value;
+  filters.status=document.getElementById('fStatus').value;
   render();
 }
 function populateFilters(){
@@ -554,7 +563,7 @@ function buildAssigneeDropdown(list){
 function render(){
   const ft=filtered();
   const cnt=document.getElementById('resultCount');
-  if(filters.project||filters.process||filters.assignees.length){cnt.style.display='inline';cnt.textContent=ft.length;}
+  if(filters.project||filters.process||filters.status||filters.assignees.length){cnt.style.display='inline';cnt.textContent=ft.length;}
   else cnt.style.display='none';
   const main=document.getElementById('mainContent');
   let html='<div id="sbar" class="sbar"></div>';
