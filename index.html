@@ -233,7 +233,10 @@ body.dark .af-item.selected{background:#2e1f6e}
   .logo img{height:36px}
   .view-switcher{order:10;width:100%;justify-content:space-between}
   .vbtn{flex:1;padding:6px 4px;font-size:11px}
-  .btn-add{padding:7px 12px;font-size:12px}
+  .btn-add{position:fixed;bottom:20px;right:20px;width:56px;height:56px;border-radius:50%;padding:0;margin:0;display:flex;align-items:center;justify-content:center;font-size:0;box-shadow:0 6px 16px rgba(79,70,229,.45);z-index:50}
+  .btn-add-icon{font-size:28px;font-weight:300;line-height:1}
+  .btn-add-label{display:none}
+  body.logged-out .btn-add{display:none}
   .main{padding:10px}
   .filters{padding:8px 10px;gap:8px;top:0;position:sticky;flex-direction:column;align-items:stretch;border-bottom:1px solid var(--border)}
   .filters-mobile-toggle{display:flex;align-items:center;justify-content:space-between;width:100%;padding:9px 12px;background:var(--fsel-bg);border:1px solid var(--border);border-radius:8px;font-size:13px;color:var(--text);cursor:pointer;font-family:inherit;font-weight:500;gap:8px}
@@ -357,7 +360,7 @@ body.dark .login-logo{background:#fff;padding:4px 8px}
     <button class="vbtn" onclick="setView('month')">📅 Month</button>
     <button class="vbtn" onclick="setView('workload')">👤 Workload</button>
   </div>
-  <button class="btn-add" id="btnAdd" onclick="openModal()">＋ Add Task</button>
+  <button class="btn-add" id="btnAdd" onclick="openModal()"><span class="btn-add-icon">＋</span><span class="btn-add-label"> Add Task</span></button>
   <button class="users-btn" onclick="openUsers()" title="Manage Users">👥</button>
   <button class="gear-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle theme">🌙</button>
   <div id="userInfo" style="position:relative">
