@@ -445,11 +445,12 @@ body.dark .role-badge.role-member{background:#14532d;color:#bbf7d0}
   <select class="fsel" id="fProcess" onchange="applyFilters()"><option value="">All Processes</option></select>
   <div class="filter-sep"></div>
   <select class="fsel" id="fStatus" onchange="applyFilters()">
-    <option value="">All Status</option>
+    <option value="">Active (hide Done)</option>
     <option value="todo">To Do</option>
     <option value="in-progress">In Progress</option>
     <option value="review">In Review</option>
     <option value="done">Done</option>
+    <option value="all">All (include Done)</option>
   </select>
   <div class="filter-sep"></div>
   <div class="assignee-filter-wrap" id="assigneeFilterWrap">
@@ -488,8 +489,8 @@ body.dark .role-badge.role-member{background:#14532d;color:#bbf7d0}
     </div>
     <div class="fg"><label>Status</label>
       <select class="fi" id="mStatus">
-        <option value="todo">To Do</option>
-        <option value="in-progress" selected>In Progress</option>
+        <option value="todo" selected>To Do</option>
+        <option value="in-progress">In Progress</option>
         <option value="review">In Review</option>
         <option value="done">Done</option>
       </select>
@@ -645,7 +646,7 @@ function getWeekStart(d){const r=new Date(d);r.setDate(r.getDate()-r.getDay());r
 function inDay(t,iso){return iso>=(t.start||iso)&&iso<=(t.end||iso);}
 function getAssignees(t){return Array.isArray(t.assignees)?t.assignees:(t.assignee?[t.assignee]:[]);}
 function myAssigneeName(){return userMap[currentUserEmail]||'';}
-function filtered(){const me=myAssigneeName();return tasks.filter(t=>(!filters.project||t.project===filters.project)&&(!filters.process||t.process===filters.process)&&(!filters.status||t.status===filters.status)&&(!filters.assignees.length||getAssignees(t).some(a=>filters.assignees.includes(a)))&&(!meMode||(me&&getAssignees(t).includes(me))));}
+function filtered(){const me=myAssigneeName();return tasks.filter(t=>(!filters.project||t.project===filters.project)&&(!filters.process||t.process===filters.process)&&(filters.status==='all'?true:filters.status?t.status===filters.status:t.status!=='done')&&(!filters.assignees.length||getAssignees(t).some(a=>filters.assignees.includes(a)))&&(!meMode||(me&&getAssignees(t).includes(me))));}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
 // ─── Status bar ───────────────────────────────────────────────────────────────
@@ -930,7 +931,7 @@ function openModal(id){
   (t?getAssignees(t):[]).forEach(a=>addAssigneeTag(a));
   document.getElementById('mStart').value=t?.start||'';
   document.getElementById('mEnd').value=t?.end||'';
-  document.getElementById('mStatus').value=t?.status||'in-progress';
+  document.getElementById('mStatus').value=t?.status||'todo';
   document.getElementById('btnDelete').style.display=(id&&canManageTasks())?'block':'none';
   // Lock every field except Status for members.
   document.querySelector('.modal').classList.toggle('readonly',statusOnly);
