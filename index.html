@@ -97,6 +97,7 @@ body.dark .logo img{background:#fff;padding:3px 6px}
 .wdh .d-num{font-size:22px;font-weight:800;color:var(--text);width:38px;height:38px;display:flex;align-items:center;justify-content:center;margin:2px auto 0;border-radius:50%}
 .wdh.is-today .d-num{background:#4f46e5;color:#fff}
 .week-body{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}
+.week-day-mobile-head{display:none}
 .week-day-col{border-right:1px solid var(--border);padding:6px;min-height:140px}
 .week-day-col:last-child{border-right:none}
 .week-day-col.is-today{background:var(--today-bg)}
@@ -257,8 +258,30 @@ body.dark .af-item.selected{background:#2e1f6e}
   .lc:nth-child(4){display:block;margin-bottom:8px}
   .lc:nth-child(5){display:inline-block;color:var(--text2);font-size:12px;margin-right:10px}
   .lc:nth-child(6){float:right}
-  /* Calendar views — horizontal scroll for week/workload */
-  .week-head,.week-body{min-width:560px}
+  /* 7-Day → vertical day cards */
+  .cal-wrap{background:transparent;border:none;box-shadow:none;border-radius:0}
+  .cal-toolbar{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:10px}
+  .cal-range{font-size:13px}
+  .week-grid{overflow:visible;display:flex;flex-direction:column;gap:10px}
+  .week-head{display:none}
+  .week-body{display:flex;flex-direction:column;gap:10px}
+  .week-day-col{border:1px solid var(--border);border-radius:12px;background:var(--surface);padding:0;min-height:0;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+  .week-day-col.is-empty{opacity:.55}
+  .week-day-mobile-head{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--border);background:var(--list-head);font-size:13px}
+  .week-day-mobile-head.is-today{background:#ede9fe;color:#4f46e5}
+  body.dark .week-day-mobile-head.is-today{background:#2e1f6e;color:#a78bfa}
+  .wm-name{font-weight:700}
+  .wm-date{color:var(--text2);font-size:12px}
+  .week-day-mobile-head.is-today .wm-date{color:inherit;opacity:.85}
+  .wm-today{background:#4f46e5;color:#fff;font-size:10px;padding:2px 7px;border-radius:10px;font-weight:700}
+  .wm-count{margin-left:auto;font-size:11px;color:var(--text3)}
+  .week-day-mobile-head.is-today .wm-count{color:inherit;opacity:.85}
+  .week-day-col .w-chip{margin:6px 10px;padding:8px 10px;font-size:13px}
+  .week-day-col .w-chip:first-of-type{margin-top:10px}
+  .week-day-col .w-chip:last-of-type{margin-bottom:10px}
+  .w-chip-name{font-size:13px}
+  .w-chip-project,.w-chip-assignee{font-size:11px}
+  /* Workload — horizontal scroll */
   .wl-head-row,.wl-row{min-width:700px;grid-template-columns:120px repeat(7,minmax(60px,1fr))}
   .wl-assignee{padding:8px;gap:6px}
   .wl-assignee .avatar{width:26px;height:26px;font-size:10px}
@@ -633,8 +656,9 @@ function render7Day(ft){
   const heads=days.map(d=>{const iso=isoDate(d),tod=iso===TODAY;
     return`<div class="wdh${tod?' is-today':''}"><div class="d-name">${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()]}</div><div class="d-num">${d.getDate()}</div></div>`;
   }).join('');
-  const cols=isos.map(iso=>{const tod=iso===TODAY;
-    return`<div class="week-day-col${tod?' is-today':''}">${ft.filter(t=>inDay(t,iso)).map(t=>{const pc=pColor(t.project);
+  const cols=isos.map((iso,i)=>{const tod=iso===TODAY,d=days[i],dayTasks=ft.filter(t=>inDay(t,iso));
+    const mobileLabel=`<div class="week-day-mobile-head${tod?' is-today':''}"><span class="wm-name">${['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][d.getDay()]}</span><span class="wm-date">${d.getDate()} ${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]}</span>${tod?'<span class="wm-today">Today</span>':''}<span class="wm-count">${dayTasks.length} task${dayTasks.length!==1?'s':''}</span></div>`;
+    return`<div class="week-day-col${tod?' is-today':''}${dayTasks.length?'':' is-empty'}">${mobileLabel}${dayTasks.map(t=>{const pc=pColor(t.project);
       return`<div class="w-chip" style="background:${pc.bg};color:${pc.text}" onmouseenter="showTip(event,${t.id})" onmouseleave="hideTip()" onclick="openModal(${t.id})"><div class="w-chip-name">${esc(t.name)}</div><div class="w-chip-project">${esc(t.project)}</div><div class="w-chip-assignee">👤 ${getAssignees(t).map(esc).join(', ')||'—'}</div></div>`;
     }).join('')}</div>`;
   }).join('');
