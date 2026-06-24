@@ -1,4 +1,7 @@
 {
+  "database": {
+    "rules": "database.rules.json"
+  },
   "hosting": {
     "public": ".",
     "ignore": [
@@ -8,7 +11,8 @@
       "server.js",
       "package.json",
       "package-lock.json",
-      "data.json"
+      "data.json",
+      "database.rules.json"
     ]
   }
 }
