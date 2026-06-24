@@ -36,7 +36,7 @@ body.dark .logo img{background:#fff;padding:3px 6px}
 
 .filters{background:var(--filter-bg);border-bottom:1px solid var(--border);padding:10px 24px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;position:sticky;top:58px;z-index:10}
 .fl{font-size:12px;font-weight:600;color:var(--text3);letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
-.fsel{padding:6px 28px 6px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;color:var(--text);background:var(--fsel-bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%2394a3b8' d='M5 6L0 0h10z'/%3E%3C/svg%3E") no-repeat right 9px center;-webkit-appearance:none;cursor:pointer;min-width:140px}
+.fsel{padding:6px 28px 6px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;color:var(--text);background:var(--fsel-bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9'%3E%3Cpath fill='%2394a3b8' d='M7 9L0 0h14z'/%3E%3C/svg%3E") no-repeat right 10px center;-webkit-appearance:none;cursor:pointer;min-width:140px}
 .fsel:focus{outline:none;border-color:#4f46e5}
 .filter-sep{width:1px;height:20px;background:var(--border);margin:0 4px}
 .tag-count{background:#4f46e5;color:#fff;font-size:11px;font-weight:700;padding:2px 7px;border-radius:10px;margin-left:4px}
@@ -57,7 +57,7 @@ body.dark .logo img{background:#fff;padding:3px 6px}
 .list-wrap{background:var(--surface);border-radius:12px;border:1px solid var(--border);overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.04)}
 .list-head{display:grid;grid-template-columns:minmax(180px,2.5fr) minmax(130px,1.5fr) minmax(100px,1fr) minmax(120px,1fr) minmax(120px,1fr) 90px;background:var(--list-head);border-bottom:2px solid var(--border)}
 .lh{padding:10px 14px;font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em}
-.list-row{display:grid;grid-template-columns:minmax(180px,2.5fr) minmax(130px,1.5fr) minmax(100px,1fr) minmax(120px,1fr) minmax(120px,1fr) 90px;border-bottom:1px solid var(--border);align-items:center;transition:background .1s;cursor:default}
+.list-row{display:grid;grid-template-columns:minmax(180px,2.5fr) minmax(130px,1.5fr) minmax(100px,1fr) minmax(120px,1fr) minmax(120px,1fr) 90px;border-bottom:1px solid var(--border);align-items:center;transition:background .1s;cursor:pointer}
 .list-row:last-child{border-bottom:none}
 .list-row:hover{background:var(--row-hover)}
 .lc{padding:12px 14px;font-size:13px;overflow:hidden}
@@ -175,11 +175,11 @@ body.dark .logo img{background:#fff;padding:3px 6px}
 
 /* ── Multi-assignee filter ── */
 .assignee-filter-wrap{position:relative}
-.assignee-filter-toggle{padding:6px 28px 6px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;color:var(--text);background:var(--fsel-bg);cursor:pointer;min-width:140px;text-align:left;white-space:nowrap;font-family:inherit;display:flex;align-items:center;justify-content:space-between;gap:6px}
+.assignee-filter-toggle{padding:6px 28px 6px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;color:var(--text);background:var(--fsel-bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9'%3E%3Cpath fill='%2394a3b8' d='M7 9L0 0h14z'/%3E%3C/svg%3E") no-repeat right 10px center;cursor:pointer;min-width:140px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:inherit}
 .assignee-filter-toggle:focus{outline:none;border-color:#4f46e5}
-.assignee-filter-toggle.has-selection{border-color:#4f46e5;background:#ede9fe;color:#4f46e5}
-body.dark .assignee-filter-toggle.has-selection{background:#2e1f6e;color:#a78bfa}
-.af-arrow{font-size:10px;opacity:.6}
+.assignee-filter-toggle.has-selection{border-color:#4f46e5;background-color:#ede9fe;color:#4f46e5}
+body.dark .assignee-filter-toggle.has-selection{background-color:#2e1f6e;color:#a78bfa}
+.af-arrow{display:inline-flex;align-items:center}
 .assignee-filter-dropdown{position:absolute;top:calc(100% + 4px);left:0;background:var(--modal-bg);border:1px solid var(--border);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.15);z-index:50;min-width:200px;max-height:260px;overflow-y:auto;padding:6px}
 .af-item{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:7px;cursor:pointer;transition:background .1s}
 .af-item:hover{background:var(--row-hover)}
@@ -234,7 +234,7 @@ body.dark .af-item.selected{background:#2e1f6e}
 @media(max-width:700px){
   .header{padding:0 12px;gap:8px;flex-wrap:wrap;height:auto;min-height:58px;padding-top:8px;padding-bottom:8px}
   .logo img{height:36px}
-  .users-btn{margin-left:auto}
+  #settingsWrap{margin-left:auto}
   .view-switcher{order:10;width:100%;justify-content:space-between}
   .vbtn{flex:1;padding:6px 4px;font-size:11px}
   .btn-add{position:fixed;bottom:60px;right:60px;width:56px;height:56px;border-radius:50%;padding:0;margin:0;display:flex;align-items:center;justify-content:center;font-size:0;box-shadow:0 6px 16px rgba(79,70,229,.45);z-index:60}
@@ -343,7 +343,7 @@ body.dark .login-logo{background:#fff;padding:4px 8px}
 /* ── Roles / access ── */
 body.role-member .btn-add{display:none}
 body.role-member #vbtnWorkload{display:none}
-body:not(.role-admin) .users-btn{display:none}
+body:not(.role-admin) #settingsUsersBtn{display:none}
 body:not(.role-admin) .users-add-row{display:none}
 body:not(.role-admin) .user-actions{display:none}
 .accounts-section{margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid var(--border)}
@@ -392,8 +392,13 @@ body.dark .role-badge.role-member{background:#14532d;color:#bbf7d0}
     <button class="vbtn" id="vbtnWorkload" onclick="setView('workload')">👤 Workload</button>
   </div>
   <button class="btn-add" id="btnAdd" onclick="openModal()"><span class="btn-add-icon">＋</span><span class="btn-add-label"> Add Task</span></button>
-  <button class="users-btn" onclick="openUsers()" title="Manage Users">👥</button>
-  <button class="gear-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+  <div id="settingsWrap" style="position:relative">
+    <button class="gear-btn" id="settingsBtn" onclick="toggleSettingsMenu()" title="Settings">⚙️</button>
+    <div class="user-menu" id="settingsMenu" style="display:none">
+      <button class="user-menu-btn" id="settingsUsersBtn" onclick="closeSettingsMenu();openUsers()">👥 Manage Users</button>
+      <button class="user-menu-btn" id="themeToggleBtn" onclick="toggleTheme()">🌙 Dark mode</button>
+    </div>
+  </div>
   <div id="userInfo" style="position:relative">
     <div id="userAvatarEl" class="user-avatar-initials" onclick="toggleUserMenu()"></div>
     <div class="user-menu" id="userMenu" style="display:none">
@@ -428,7 +433,7 @@ body.dark .role-badge.role-member{background:#14532d;color:#bbf7d0}
 <div class="filters">
   <button class="filters-mobile-toggle" id="filtersMobileToggle" onclick="toggleMobileFilters()">
     <span>Filters <span id="filterToggleCount"></span></span>
-    <span class="af-arrow">▾</span>
+    <span class="af-arrow"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="9"><path fill="#94a3b8" d="M7 9L0 0h14z"/></svg></span>
   </button>
   <span class="fl">Filter</span>
   <select class="fsel" id="fProject" onchange="applyFilters()"><option value="">All Projects</option></select>
@@ -445,7 +450,7 @@ body.dark .role-badge.role-member{background:#14532d;color:#bbf7d0}
   <div class="filter-sep"></div>
   <div class="assignee-filter-wrap" id="assigneeFilterWrap">
     <button class="assignee-filter-toggle" id="assigneeFilterToggle" onclick="toggleAssigneeDropdown()">
-      <span id="assigneeFilterLabel">All Assignees</span> <span class="af-arrow">▾</span>
+      <span id="assigneeFilterLabel">All Assignees</span>
     </button>
     <div class="assignee-filter-dropdown" id="assigneeFilterDropdown" style="display:none"></div>
   </div>
@@ -557,7 +562,14 @@ function toggleUserMenu(){
 document.addEventListener('click',e=>{
   const info=document.getElementById('userInfo');
   if(info&&!info.contains(e.target)) document.getElementById('userMenu').style.display='none';
+  const sw=document.getElementById('settingsWrap');
+  if(sw&&!sw.contains(e.target)) document.getElementById('settingsMenu').style.display='none';
 });
+function toggleSettingsMenu(){
+  const m=document.getElementById('settingsMenu');
+  m.style.display=m.style.display==='none'?'block':'none';
+}
+function closeSettingsMenu(){document.getElementById('settingsMenu').style.display='none';}
 
 function startRealtimeSync(){
   _db.ref('data').on('value', snap=>{
@@ -649,8 +661,9 @@ function applyRoleToUI(){
   document.body.classList.add('role-'+currentRole);
   if(currentRole==='member' && currentView==='workload') setView('list');
 }
-// Only the owner may change account levels — enforced here and in the database rules.
-function canEditRoles(){ return (currentUserEmail||'').toLowerCase()===OWNER_EMAIL; }
+// Any admin may change account levels. Safeguards: the owner can never be demoted,
+// and no one can change their own level (prevents self-lockout / escalation games).
+function canEditRoles(){ return canManageUsers(); }
 async function setAccountRole(email,role){
   if(!canEditRoles()){renderUsers();return;}
   if(email===currentUserEmail||email.toLowerCase()===OWNER_EMAIL){renderUsers();return;}
@@ -761,7 +774,7 @@ function renderList(ft){
     </div>${ft.map(t=>{
       const pc=pColor(t.project),sc=STATUS_CLASS[t.status]||'s-todo',sl=STATUS_LABEL[t.status]||t.status;
       const dt=(t.start&&t.end&&t.start!==t.end)?`${fmtDate(t.start)} – ${fmtDate(t.end)}`:fmtDate(t.start||t.end||'');
-      return `<div class="list-row" ondblclick="openModal(${t.id})">
+      return `<div class="list-row" onclick="openModal(${t.id})">
         <div class="lc"><div class="task-name-text">${esc(t.name)}</div></div>
         <div class="lc"><span class="badge" style="background:${pc.bg};color:${pc.text}">${esc(t.project)}</span></div>
         <div class="lc"><span class="badge proc-badge">${esc(t.process)}</span></div>
@@ -1056,24 +1069,26 @@ function roleForUser(name){
   return best;
 }
 
-function renderAccountsSection(){
-  if(!canManageUsers()) return '';
-  const accounts=[...new Set([...Object.keys(roleMap),...Object.keys(userMap),currentUserEmail].filter(Boolean))]
-    .sort((a,b)=>a.localeCompare(b));
-  if(!accounts.length) return '';
+function emailsForName(name){
+  return Object.entries(userMap).filter(([,n])=>n===name).map(([e])=>e);
+}
+// Account-access (role) controls shown inside a user card's edit panel — one row per
+// linked account email. The owner row and your own row are locked.
+function roleAccessRows(name){
+  if(!canEditRoles()) return '';
+  const emails=emailsForName(name);
+  if(!emails.length) return '<div class="account-link" style="margin-top:8px">No account linked to this user yet — they sign in and link themselves first.</div>';
   const roleOpt=(r,sel)=>`<option value="${r}"${sel===r?' selected':''}>${r[0].toUpperCase()+r.slice(1)}</option>`;
-  const ownerEditing=canEditRoles();
-  return `<div class="accounts-section">
-    <div class="accounts-title">Account access</div>
-    ${ownerEditing?'':'<div class="account-link" style="margin-bottom:8px">Only the owner can change account levels.</div>'}
-    ${accounts.map(email=>{
-      const role=roleFor(email), name=userMap[email]||'';
+  return `<div class="account-access-block">
+    <div class="accounts-title" style="margin-top:10px">Account access</div>
+    ${emails.map(email=>{
+      const role=roleFor(email);
       const isOwner=email.toLowerCase()===OWNER_EMAIL, isSelf=email===currentUserEmail;
-      const locked=!ownerEditing||isOwner||isSelf;
-      const tip=isOwner?'The owner is always admin':isSelf?'You cannot change your own level':'Only the owner can change account levels';
+      const locked=isOwner||isSelf;
+      const tip=isOwner?'The owner is always admin':isSelf?'You cannot change your own level':'';
       return `<div class="account-row">
-        <div class="account-email">${esc(email)}${isSelf?'<span class="you-tag">you</span>':''}${isOwner?'<span class="you-tag">owner</span>':''}${name?`<div class="account-link">→ ${esc(name)}</div>`:''}</div>
-        <select class="account-role-sel" ${locked?`disabled title="${tip}"`:''} onchange="setAccountRole('${esc(email)}',this.value)">
+        <div class="account-email">${esc(email)}${isSelf?'<span class="you-tag">you</span>':''}${isOwner?'<span class="you-tag">owner</span>':''}</div>
+        <select class="account-role-sel" ${locked?`disabled title="${tip}"`:''} onclick="event.stopPropagation()" onchange="event.stopPropagation();setAccountRole('${esc(email)}',this.value)">
           ${roleOpt('admin',role)}${roleOpt('manager',role)}${roleOpt('member',role)}
         </select>
       </div>`;
@@ -1084,11 +1099,10 @@ function renderAccountsSection(){
 function renderUsers(){
   const list=allAssignees();
   const el=document.getElementById('usersList');
-  const accountsHtml=renderAccountsSection();
-  if(!list.length){el.innerHTML=accountsHtml+'<div class="users-empty">No users yet. Add one above.</div>';return;}
+  if(!list.length){el.innerHTML='<div class="users-empty">No users yet. Add one above.</div>';return;}
   const emailsByName={};
   Object.entries(userMap).forEach(([email,n])=>{(emailsByName[n]=emailsByName[n]||[]).push(email);});
-  el.innerHTML=accountsHtml+list.map(name=>{
+  el.innerHTML=list.map(name=>{
     const count=taskCountFor(name);
     const emails=emailsByName[name]||[];
     const clickable=canManageUsers();
@@ -1115,7 +1129,7 @@ function startEditUser(name){
     <button class="user-save-btn" onclick="event.stopPropagation();saveEditUser('${esc(name)}')">Save</button>
     <button class="user-cancel-btn" onclick="event.stopPropagation();renderUsers()">Cancel</button>
     <button class="user-del-btn" onclick="event.stopPropagation();deleteUser('${esc(name)}')">🗑</button>
-  </div>`;
+  </div>${roleAccessRows(name)}`;
   document.getElementById('editUserInput').focus();
   document.getElementById('editUserInput').select();
 }
@@ -1188,7 +1202,7 @@ function toggleTheme(){
 function updateThemeBtns(){
   const dark=document.body.classList.contains('dark');
   const tb=document.getElementById('themeToggleBtn');
-  if(tb){tb.textContent=dark?'☀️':'🌙';tb.title=dark?'Switch to light mode':'Switch to dark mode';}
+  if(tb){tb.textContent=dark?'☀️ Light mode':'🌙 Dark mode';tb.title=dark?'Switch to light mode':'Switch to dark mode';}
 }
 function applyStoredTheme(){
   const t=localStorage.getItem('theme');
