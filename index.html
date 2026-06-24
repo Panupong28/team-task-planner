@@ -254,18 +254,17 @@ body.dark .af-item.selected{background:#2e1f6e}
   /* List → card layout */
   .list-wrap{background:transparent;border:none;box-shadow:none;border-radius:0;overflow:visible;display:flex;flex-direction:column;gap:10px}
   .list-head{display:none}
-  .list-row{display:flex;flex-direction:column;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px;box-shadow:0 1px 3px rgba(0,0,0,.04);cursor:pointer;overflow:hidden}
+  .list-row{display:flex;flex-direction:column;align-items:flex-start;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px 12px 14px;padding-right:84px;box-shadow:0 1px 3px rgba(0,0,0,.04);cursor:pointer;overflow:hidden;position:relative;text-align:left}
   .list-row:hover{background:var(--surface)}
-  .lc{padding:0;display:block;overflow:hidden;min-width:0}
-  .lc:nth-child(1){font-size:15px;font-weight:700;white-space:normal;word-break:break-word}
+  .lc{padding:0;display:block;overflow:hidden;min-width:0;width:100%;text-align:left}
+  .lc:nth-child(1){font-size:15px;font-weight:700;white-space:normal;word-break:break-word;padding-right:4px}
   .lc:nth-child(2),.lc:nth-child(3){display:flex;flex-wrap:wrap;gap:6px}
-  .lc:nth-child(2) .badge,.lc:nth-child(3) .badge{max-width:100%;white-space:normal;word-break:break-word}
-  .lc:nth-child(4){display:flex;flex-wrap:wrap;gap:4px}
+  .lc:nth-child(2) .badge,.lc:nth-child(3) .badge{max-width:100%;white-space:normal;word-break:break-word;text-align:left}
+  .lc:nth-child(4){position:absolute;top:12px;right:12px;width:auto;display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+  .lc:nth-child(4) .assignee-cell{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+  .lc:nth-child(4) .avatar{width:28px;height:28px;font-size:11px}
   .lc:nth-child(5){color:var(--text2);font-size:12px}
   .lc:nth-child(6){display:flex}
-  .list-row .badges-row{display:flex;flex-wrap:wrap;gap:6px}
-  .list-row .meta-row{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
-  .list-row .meta-row .lc:nth-child(5){flex:1;min-width:0}
   /* 7-Day → vertical day cards */
   .cal-wrap{background:transparent;border:none;box-shadow:none;border-radius:0}
   .cal-toolbar{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:10px}
