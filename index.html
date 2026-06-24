@@ -172,6 +172,9 @@ body.dark .logo img{background:#fff;padding:3px 6px}
 /* ── Gear & Settings ── */
 .gear-btn{background:none;border:none;font-size:20px;cursor:pointer;padding:4px;border-radius:6px;line-height:1;transition:transform .2s}
 .gear-btn:hover{transform:scale(1.15)}
+.me-btn{display:flex;align-items:center;gap:5px;background:none;border:1px solid var(--border);color:var(--text);font-size:13px;font-weight:700;cursor:pointer;padding:7px 12px;border-radius:8px;line-height:1;font-family:inherit;transition:all .15s}
+.me-btn:hover{border-color:#4f46e5}
+.me-btn.active{background:#4f46e5;color:#fff;border-color:#4f46e5}
 
 /* ── Multi-assignee filter ── */
 .assignee-filter-wrap{position:relative}
@@ -234,7 +237,7 @@ body.dark .af-item.selected{background:#2e1f6e}
 @media(max-width:700px){
   .header{padding:0 12px;gap:8px;flex-wrap:wrap;height:auto;min-height:58px;padding-top:8px;padding-bottom:8px}
   .logo img{height:36px}
-  #settingsWrap{margin-left:auto}
+  #meBtn{margin-left:auto}
   .view-switcher{order:10;width:100%;justify-content:space-between}
   .vbtn{flex:1;padding:6px 4px;font-size:11px}
   .btn-add{position:fixed;bottom:60px;right:60px;width:56px;height:56px;border-radius:50%;padding:0;margin:0;display:flex;align-items:center;justify-content:center;font-size:0;box-shadow:0 6px 16px rgba(79,70,229,.45);z-index:60}
@@ -310,7 +313,7 @@ body.dark .af-item.selected{background:#2e1f6e}
   /* Modal full width on mobile */
   .modal{width:96vw;max-width:96vw;margin:10px}
   /* User menu position */
-  .user-menu{right:10px;top:auto;margin-top:6px}
+  .user-menu{right:0;top:calc(100% + 6px)}
 }
 /* ── Auth ── */
 body.logged-out .header,body.logged-out .filters,body.logged-out #mainContent{display:none!important}
@@ -327,7 +330,7 @@ body.dark .login-logo{background:#fff;padding:4px 8px}
 /* ── User avatar / menu ── */
 .user-avatar{width:32px;height:32px;border-radius:50%;object-fit:cover;cursor:pointer;border:2px solid var(--border)}
 .user-avatar-initials{width:32px;height:32px;border-radius:50%;background:#4f46e5;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0}
-.user-menu{position:absolute;top:62px;right:20px;background:var(--modal-bg);border:1px solid var(--border);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.15);z-index:100;min-width:220px;overflow:hidden}
+.user-menu{position:absolute;top:calc(100% + 8px);right:0;background:var(--modal-bg);border:1px solid var(--border);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.15);z-index:100;min-width:220px;overflow:hidden}
 .user-menu-info{padding:14px 16px;border-bottom:1px solid var(--border)}
 .user-menu-name{font-weight:600;font-size:14px;margin-bottom:2px}
 .user-menu-email{font-size:12px;color:var(--text2)}
@@ -392,6 +395,7 @@ body.dark .role-badge.role-member{background:#14532d;color:#bbf7d0}
     <button class="vbtn" id="vbtnWorkload" onclick="setView('workload')">👤 Workload</button>
   </div>
   <button class="btn-add" id="btnAdd" onclick="openModal()"><span class="btn-add-icon">＋</span><span class="btn-add-label"> Add Task</span></button>
+  <button class="me-btn" id="meBtn" onclick="toggleMeMode()" title="Show only tasks assigned to me">🙋 ME</button>
   <div id="settingsWrap" style="position:relative">
     <button class="gear-btn" id="settingsBtn" onclick="toggleSettingsMenu()" title="Settings">⚙️</button>
     <div class="user-menu" id="settingsMenu" style="display:none">
@@ -570,6 +574,16 @@ function toggleSettingsMenu(){
   m.style.display=m.style.display==='none'?'block':'none';
 }
 function closeSettingsMenu(){document.getElementById('settingsMenu').style.display='none';}
+function toggleMeMode(){
+  if(!meMode && !myAssigneeName()){
+    setStatus('error','Link your account to an assignee first (avatar menu → Linked to assignee)');
+    setTimeout(()=>setStatus(''),2800);
+    return;
+  }
+  meMode=!meMode;
+  const b=document.getElementById('meBtn');if(b)b.classList.toggle('active',meMode);
+  render();
+}
 
 function startRealtimeSync(){
   _db.ref('data').on('value', snap=>{
@@ -616,6 +630,7 @@ const TODAY=(()=>{const d=new Date();const y=d.getFullYear(),m=String(d.getMonth
 let weekStart=getWeekStart(new Date());
 let monthDate=new Date(new Date().getFullYear(),new Date().getMonth(),1);
 let filters={project:'',process:'',status:'',assignees:[]};
+let meMode=false;
 let editId=null, isBusy=false;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -629,7 +644,8 @@ function addDays(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r;}
 function getWeekStart(d){const r=new Date(d);r.setDate(r.getDate()-r.getDay());return r;}
 function inDay(t,iso){return iso>=(t.start||iso)&&iso<=(t.end||iso);}
 function getAssignees(t){return Array.isArray(t.assignees)?t.assignees:(t.assignee?[t.assignee]:[]);}
-function filtered(){return tasks.filter(t=>(!filters.project||t.project===filters.project)&&(!filters.process||t.process===filters.process)&&(!filters.status||t.status===filters.status)&&(!filters.assignees.length||getAssignees(t).some(a=>filters.assignees.includes(a))));}
+function myAssigneeName(){return userMap[currentUserEmail]||'';}
+function filtered(){const me=myAssigneeName();return tasks.filter(t=>(!filters.project||t.project===filters.project)&&(!filters.process||t.process===filters.process)&&(!filters.status||t.status===filters.status)&&(!filters.assignees.length||getAssignees(t).some(a=>filters.assignees.includes(a)))&&(!meMode||(me&&getAssignees(t).includes(me))));}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
 // ─── Status bar ───────────────────────────────────────────────────────────────
@@ -1230,6 +1246,7 @@ _auth.onAuthStateChanged(user=>{
     document.body.classList.add('logged-out');
     currentUserEmail='';
     tasks=[];users=[];userMap={};roleMap={};
+    meMode=false;document.getElementById('meBtn')?.classList.remove('active');
     document.getElementById('usersOverlay').style.display='none';
     applyRoleToUI();render();
   }
