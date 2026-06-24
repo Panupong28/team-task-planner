@@ -531,10 +531,11 @@ async function dbSave(data){
 function startRealtimeSync(){
   _db.ref('data').on('value', snap=>{
     if(isBusy) return;
-    const data = snap.val() || {tasks:[], nextId:1, users:[], userMap:{}};
+    const data = snap.val() || {tasks:[], nextId:1, users:[], userLinks:[]};
     tasks = data.tasks || [];
     users = data.users || [];
-    userMap = data.userMap || {};
+    userMap = {};
+    (data.userLinks||[]).forEach(l=>{if(l&&l.email)userMap[l.email]=l.name;});
     nextId = data.nextId || tasks.reduce((m,t)=>Math.max(m,Number(t.id)||0),0)+1;
     populateFilters(); render();
     if(document.getElementById('usersOverlay').style.display!=='none') renderUsers();
@@ -597,7 +598,8 @@ function setStatus(type,msg){
 function loadTasks(){ startRealtimeSync(); }
 
 async function persist(){
-  await dbSave({tasks, nextId, users, userMap});
+  const userLinks=Object.entries(userMap).map(([email,name])=>({email,name}));
+  await dbSave({tasks, nextId, users, userLinks});
 }
 
 // ─── Views ────────────────────────────────────────────────────────────────────
