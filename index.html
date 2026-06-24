@@ -316,11 +316,12 @@ body.dark .af-item.selected{background:#2e1f6e}
 body.logged-out .header,body.logged-out .filters,body.logged-out #mainContent{display:none!important}
 #loginOverlay{display:none;position:fixed;inset:0;background:var(--bg);z-index:1000;align-items:center;justify-content:center}
 body.logged-out #loginOverlay{display:flex}
-.login-box{background:var(--surface);border-radius:20px;padding:48px 40px;box-shadow:0 8px 40px rgba(0,0,0,.12);text-align:center;width:100%;max-width:380px}
-.login-logo{height:72px;border-radius:12px;margin-bottom:20px}
+#loginOverlay{padding:16px}
+.login-box{background:var(--surface);border-radius:18px;padding:32px 28px;box-shadow:0 8px 40px rgba(0,0,0,.12);text-align:center;width:100%;max-width:340px;margin:0 auto}
+.login-logo{height:60px;border-radius:12px;margin-bottom:16px}
 body.dark .login-logo{background:#fff;padding:4px 8px}
-.login-title{font-size:22px;font-weight:700;margin-bottom:6px}
-.login-sub{font-size:14px;color:var(--text2);margin-bottom:32px}
+.login-title{font-size:20px;font-weight:700;margin-bottom:4px}
+.login-sub{font-size:13px;color:var(--text2);margin-bottom:24px}
 .google-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:13px 20px;border:1px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);font-size:15px;font-weight:500;cursor:pointer;transition:background .15s;font-family:inherit}
 .google-btn:hover{background:var(--row-hover)}
 /* ── User avatar / menu ── */
@@ -336,8 +337,7 @@ body.dark .login-logo{background:#fff;padding:4px 8px}
 .user-menu-link select:focus{outline:none;border-color:#4f46e5}
 .user-menu-link .linked-hint{font-size:11px;color:var(--text3);margin-top:6px}
 .user-menu-btn{width:100%;padding:11px 16px;text-align:left;border:none;background:none;color:var(--text);font-size:14px;cursor:pointer;display:block;font-family:inherit}
-.user-email-tag{font-size:11px;color:var(--text3);margin-top:2px;display:flex;align-items:center;gap:4px}
-.user-email-tag::before{content:"✉";font-size:10px}
+.user-email-tag{font-size:11px;color:var(--text3);margin-top:2px;display:flex;align-items:center}
 .user-menu-btn:hover{background:var(--row-hover)}
 
 /* ── Roles / access ── */
@@ -559,9 +559,6 @@ document.addEventListener('click',e=>{
   if(info&&!info.contains(e.target)) document.getElementById('userMenu').style.display='none';
 });
 
-async function dbSave(data){
-  await _db.ref('data').set(data);
-}
 function startRealtimeSync(){
   _db.ref('data').on('value', snap=>{
     if(isBusy) return;
@@ -652,23 +649,31 @@ function applyRoleToUI(){
   document.body.classList.add('role-'+currentRole);
   if(currentRole==='member' && currentView==='workload') setView('list');
 }
+// Only the owner may change account levels — enforced here and in the database rules.
+function canEditRoles(){ return (currentUserEmail||'').toLowerCase()===OWNER_EMAIL; }
 async function setAccountRole(email,role){
-  if(!canManageUsers()){renderUsers();return;}
+  if(!canEditRoles()){renderUsers();return;}
   if(email===currentUserEmail||email.toLowerCase()===OWNER_EMAIL){renderUsers();return;}
   isBusy=true;
   try{
     if(role) roleMap[email]=role; else delete roleMap[email];
-    await persist();
+    await persistRoles();
     applyRoleToUI();
     setStatus('success','Role updated ✓');setTimeout(()=>setStatus(''),1500);
   }catch(e){setStatus('error','Failed: '+e.message);}
   finally{isBusy=false;renderUsers();}
 }
 
+// Tasks / users / links — writable by any signed-in teammate. Written field-by-field
+// (update, not set) so the owner-only roleLinks node is never overwritten.
 async function persist(){
   const userLinks=Object.entries(userMap).map(([email,name])=>({email,name}));
+  await _db.ref('data').update({tasks, nextId, users, userLinks});
+}
+// Account levels — owner-only node, written separately.
+async function persistRoles(){
   const roleLinks=Object.entries(roleMap).map(([email,role])=>({email,role}));
-  await dbSave({tasks, nextId, users, userLinks, roleLinks});
+  await _db.ref('data/roleLinks').set(roleLinks);
 }
 
 // ─── Views ────────────────────────────────────────────────────────────────────
@@ -1057,15 +1062,18 @@ function renderAccountsSection(){
     .sort((a,b)=>a.localeCompare(b));
   if(!accounts.length) return '';
   const roleOpt=(r,sel)=>`<option value="${r}"${sel===r?' selected':''}>${r[0].toUpperCase()+r.slice(1)}</option>`;
+  const ownerEditing=canEditRoles();
   return `<div class="accounts-section">
     <div class="accounts-title">Account access</div>
+    ${ownerEditing?'':'<div class="account-link" style="margin-bottom:8px">Only the owner can change account levels.</div>'}
     ${accounts.map(email=>{
       const role=roleFor(email), name=userMap[email]||'';
       const isOwner=email.toLowerCase()===OWNER_EMAIL, isSelf=email===currentUserEmail;
-      const locked=isOwner||isSelf;
+      const locked=!ownerEditing||isOwner||isSelf;
+      const tip=isOwner?'The owner is always admin':isSelf?'You cannot change your own level':'Only the owner can change account levels';
       return `<div class="account-row">
         <div class="account-email">${esc(email)}${isSelf?'<span class="you-tag">you</span>':''}${isOwner?'<span class="you-tag">owner</span>':''}${name?`<div class="account-link">→ ${esc(name)}</div>`:''}</div>
-        <select class="account-role-sel" ${locked?'disabled title="You cannot change your own level"':''} onchange="setAccountRole('${esc(email)}',this.value)">
+        <select class="account-role-sel" ${locked?`disabled title="${tip}"`:''} onchange="setAccountRole('${esc(email)}',this.value)">
           ${roleOpt('admin',role)}${roleOpt('manager',role)}${roleOpt('member',role)}
         </select>
       </div>`;
@@ -1089,8 +1097,8 @@ function renderUsers(){
       <div class="avatar" style="background:${aColor(name)}">${initials(name)}</div>
       <div class="user-info">
         <div class="user-name">${esc(name)}${role?`<span class="role-badge role-${role}">${role[0].toUpperCase()+role.slice(1)}</span>`:''}</div>
-        <div class="user-tasks">${count} task${count!==1?'s':''}</div>
         ${emails.map(e=>`<div class="user-email-tag">${esc(e)}</div>`).join('')}
+        <div class="user-tasks">${count} task${count!==1?'s':''}</div>
       </div>
     </div>`;
   }).join('');
