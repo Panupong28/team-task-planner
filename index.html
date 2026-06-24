@@ -171,17 +171,7 @@ body.dark .logo img{background:#fff;padding:3px 6px}
 
 /* ── Gear & Settings ── */
 .gear-btn{background:none;border:none;font-size:20px;cursor:pointer;padding:4px;border-radius:6px;line-height:1;transition:transform .2s}
-.gear-btn:hover{transform:rotate(30deg)}
-.settings-overlay{position:fixed;inset:0;z-index:300;display:flex;align-items:flex-start;justify-content:flex-end;padding-top:62px;padding-right:20px}
-.settings-panel{background:var(--modal-bg);border:1px solid var(--border);border-radius:14px;width:260px;box-shadow:0 12px 40px rgba(0,0,0,.2);padding:20px}
-.settings-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
-.settings-title{font-size:15px;font-weight:700;color:var(--text)}
-.settings-section{margin-bottom:14px}
-.settings-label{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
-.theme-options{display:flex;gap:8px}
-.theme-btn{flex:1;padding:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s}
-.theme-btn:hover{border-color:#4f46e5}
-.theme-btn.active{border-color:#4f46e5;background:#4f46e5;color:#fff}
+.gear-btn:hover{transform:scale(1.15)}
 
 /* ── Multi-assignee filter ── */
 .assignee-filter-wrap{position:relative}
@@ -264,14 +254,18 @@ body.dark .af-item.selected{background:#2e1f6e}
   /* List → card layout */
   .list-wrap{background:transparent;border:none;box-shadow:none;border-radius:0;overflow:visible;display:flex;flex-direction:column;gap:10px}
   .list-head{display:none}
-  .list-row{display:block;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px;box-shadow:0 1px 3px rgba(0,0,0,.04);cursor:pointer}
+  .list-row{display:flex;flex-direction:column;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px;box-shadow:0 1px 3px rgba(0,0,0,.04);cursor:pointer;overflow:hidden}
   .list-row:hover{background:var(--surface)}
-  .lc{padding:0;display:block;overflow:visible}
-  .lc:nth-child(1){font-size:15px;font-weight:700;margin-bottom:8px}
-  .lc:nth-child(2),.lc:nth-child(3){display:inline-block;margin-right:6px;margin-bottom:8px}
-  .lc:nth-child(4){display:block;margin-bottom:8px}
-  .lc:nth-child(5){display:inline-block;color:var(--text2);font-size:12px;margin-right:10px}
-  .lc:nth-child(6){float:right}
+  .lc{padding:0;display:block;overflow:hidden;min-width:0}
+  .lc:nth-child(1){font-size:15px;font-weight:700;white-space:normal;word-break:break-word}
+  .lc:nth-child(2),.lc:nth-child(3){display:flex;flex-wrap:wrap;gap:6px}
+  .lc:nth-child(2) .badge,.lc:nth-child(3) .badge{max-width:100%;white-space:normal;word-break:break-word}
+  .lc:nth-child(4){display:flex;flex-wrap:wrap;gap:4px}
+  .lc:nth-child(5){color:var(--text2);font-size:12px}
+  .lc:nth-child(6){display:flex}
+  .list-row .badges-row{display:flex;flex-wrap:wrap;gap:6px}
+  .list-row .meta-row{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+  .list-row .meta-row .lc:nth-child(5){flex:1;min-width:0}
   /* 7-Day → vertical day cards */
   .cal-wrap{background:transparent;border:none;box-shadow:none;border-radius:0}
   .cal-toolbar{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:10px}
@@ -357,7 +351,7 @@ body.dark .login-logo{background:#fff;padding:4px 8px}
   </div>
   <button class="btn-add" id="btnAdd" onclick="openModal()">＋ Add Task</button>
   <button class="users-btn" onclick="openUsers()" title="Manage Users">👥</button>
-  <button class="gear-btn" onclick="openSettings()" title="Settings">⚙️</button>
+  <button class="gear-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle theme">🌙</button>
   <div id="userInfo" style="position:relative">
     <div id="userAvatarEl" class="user-avatar-initials" onclick="toggleUserMenu()"></div>
     <div class="user-menu" id="userMenu" style="display:none">
@@ -387,22 +381,6 @@ body.dark .login-logo{background:#fff;padding:4px 8px}
   </div>
 </div>
 
-<!-- Settings Panel -->
-<div class="settings-overlay" id="settingsOverlay" style="display:none" onclick="closeSettingsOutside(event)">
-  <div class="settings-panel">
-    <div class="settings-head">
-      <span class="settings-title">Settings</span>
-      <button class="close-btn" onclick="closeSettings()">✕</button>
-    </div>
-    <div class="settings-section">
-      <div class="settings-label">Theme</div>
-      <div class="theme-options">
-        <button class="theme-btn" id="themeLight" onclick="setTheme('light')">☀️ Light</button>
-        <button class="theme-btn" id="themeDark" onclick="setTheme('dark')">🌙 Dark</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 <div class="filters">
   <button class="filters-mobile-toggle" id="filtersMobileToggle" onclick="toggleMobileFilters()">
@@ -1013,26 +991,24 @@ async function deleteUser(name){
   finally{isBusy=false;renderUsers();}
 }
 
-// ─── Settings & Theme ────────────────────────────────────────────────────────
-function openSettings(){
-  document.getElementById('settingsOverlay').style.display='flex';
-  updateThemeBtns();
-}
-function closeSettings(){document.getElementById('settingsOverlay').style.display='none';}
-function closeSettingsOutside(e){if(e.target.id==='settingsOverlay')closeSettings();}
+// ─── Theme ────────────────────────────────────────────────────────────────────
 function setTheme(t){
   document.body.classList.toggle('dark', t==='dark');
   localStorage.setItem('theme', t);
   updateThemeBtns();
 }
+function toggleTheme(){
+  setTheme(document.body.classList.contains('dark')?'light':'dark');
+}
 function updateThemeBtns(){
   const dark=document.body.classList.contains('dark');
-  document.getElementById('themeLight').classList.toggle('active',!dark);
-  document.getElementById('themeDark').classList.toggle('active', dark);
+  const tb=document.getElementById('themeToggleBtn');
+  if(tb){tb.textContent=dark?'☀️':'🌙';tb.title=dark?'Switch to light mode':'Switch to dark mode';}
 }
 function applyStoredTheme(){
   const t=localStorage.getItem('theme');
   if(t==='dark') document.body.classList.add('dark');
+  updateThemeBtns();
 }
 applyStoredTheme();
 
