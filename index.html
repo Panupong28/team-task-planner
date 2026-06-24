@@ -203,8 +203,10 @@ body.dark .af-item.selected{background:#2e1f6e}
 .users-add-input:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.1)}
 .users-add-btn{padding:8px 16px;background:#4f46e5;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
 .users-add-btn:hover{background:#4338ca}
-.user-card{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--surface);margin-bottom:8px;transition:box-shadow .15s}
+.user-card{display:flex;align-items:center;gap:12px;padding:16px 12px;border-radius:10px;border:1px solid var(--border);background:var(--surface);margin-bottom:8px;transition:box-shadow .15s}
 .user-card:hover{box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.user-card-clickable{cursor:pointer}
+.user-card-clickable:hover{border-color:#4f46e5;box-shadow:0 2px 8px rgba(79,70,229,.15)}
 .user-card .avatar{width:36px;height:36px;font-size:13px;font-weight:800;flex-shrink:0}
 .user-info{flex:1;min-width:0}
 .user-name{font-size:14px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -214,8 +216,9 @@ body.dark .af-item.selected{background:#2e1f6e}
 .user-edit-btn:hover{border-color:#4f46e5;color:#4f46e5}
 .user-del-btn{padding:5px 10px;border:none;background:#fef2f2;color:#dc2626;border-radius:6px;font-size:12px;cursor:pointer;font-weight:500}
 .user-del-btn:hover{background:#fee2e2}
-.user-edit-row{display:flex;gap:6px;flex:1;min-width:0}
-.user-edit-input{flex:1;padding:5px 10px;border:1px solid #4f46e5;border-radius:6px;font-size:13px;color:var(--input-color);background:var(--input-bg);font-family:inherit;box-shadow:0 0 0 2px rgba(79,70,229,.15)}
+.user-edit-row{display:flex;gap:6px;flex:1;min-width:0;flex-wrap:wrap}
+.user-edit-input{flex:1 1 100%;min-width:0;padding:5px 10px;border:1px solid #4f46e5;border-radius:6px;font-size:13px;color:var(--input-color);background:var(--input-bg);font-family:inherit;box-shadow:0 0 0 2px rgba(79,70,229,.15)}
+.user-edit-row .user-del-btn{margin-left:auto}
 .user-save-btn{padding:5px 10px;background:#4f46e5;color:#fff;border:none;border-radius:6px;font-size:12px;cursor:pointer;font-weight:600}
 .user-cancel-btn{padding:5px 10px;border:1px solid var(--border);background:var(--surface);color:var(--text2);border-radius:6px;font-size:12px;cursor:pointer}
 .users-empty{text-align:center;padding:30px;color:var(--text3);font-size:13px}
@@ -336,6 +339,33 @@ body.dark .login-logo{background:#fff;padding:4px 8px}
 .user-email-tag{font-size:11px;color:var(--text3);margin-top:2px;display:flex;align-items:center;gap:4px}
 .user-email-tag::before{content:"✉";font-size:10px}
 .user-menu-btn:hover{background:var(--row-hover)}
+
+/* ── Roles / access ── */
+body.role-member .btn-add{display:none}
+body.role-member #vbtnWorkload{display:none}
+body:not(.role-admin) .users-btn{display:none}
+body:not(.role-admin) .users-add-row{display:none}
+body:not(.role-admin) .user-actions{display:none}
+.accounts-section{margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.accounts-title{font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px}
+.account-row{display:flex;align-items:center;gap:10px;padding:8px 0}
+.account-email{flex:1;min-width:0;font-size:13px;color:var(--text);overflow:hidden;text-overflow:ellipsis}
+.account-email .you-tag{font-size:10px;font-weight:700;color:#4f46e5;background:rgba(79,70,229,.12);border-radius:6px;padding:1px 6px;margin-left:6px;vertical-align:middle}
+.account-link{font-size:11px;color:var(--text3);margin-top:2px}
+.account-role-sel{padding:6px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-weight:600;color:var(--input-color);background:var(--input-bg);font-family:inherit;cursor:pointer}
+.role-badge{display:inline-block;margin-left:8px;padding:2px 8px;font-size:10px;font-weight:700;border-radius:10px;text-transform:uppercase;letter-spacing:.04em;vertical-align:middle}
+.role-badge.role-admin{background:#fee2e2;color:#b91c1c}
+.role-badge.role-manager{background:#dbeafe;color:#1d4ed8}
+.role-badge.role-member{background:#dcfce7;color:#15803d}
+body.dark .role-badge.role-admin{background:#7f1d1d;color:#fecaca}
+body.dark .role-badge.role-manager{background:#1e3a8a;color:#bfdbfe}
+body.dark .role-badge.role-member{background:#14532d;color:#bbf7d0}
+.account-role-sel:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.1)}
+.account-role-sel:disabled{opacity:.55;cursor:not-allowed}
+.modal.readonly .fi:disabled,.modal.readonly .tag-text-input:disabled{opacity:.6;cursor:not-allowed}
+.modal.readonly #assigneeTagWrap{opacity:.6;pointer-events:none}
+.modal.readonly #assigneeTagWrap .tag-x{display:none}
+.modal.readonly #mStatus{opacity:1;cursor:pointer}
 </style>
 </head>
 <body class="logged-out">
@@ -359,7 +389,7 @@ body.dark .login-logo{background:#fff;padding:4px 8px}
     <button class="vbtn active" onclick="setView('list')">☰ List</button>
     <button class="vbtn" onclick="setView('7day')">⬜ 7 Day</button>
     <button class="vbtn" onclick="setView('month')">📅 Month</button>
-    <button class="vbtn" onclick="setView('workload')">👤 Workload</button>
+    <button class="vbtn" id="vbtnWorkload" onclick="setView('workload')">👤 Workload</button>
   </div>
   <button class="btn-add" id="btnAdd" onclick="openModal()"><span class="btn-add-icon">＋</span><span class="btn-add-label"> Add Task</span></button>
   <button class="users-btn" onclick="openUsers()" title="Manage Users">👥</button>
@@ -540,6 +570,9 @@ function startRealtimeSync(){
     users = data.users || [];
     userMap = {};
     (data.userLinks||[]).forEach(l=>{if(l&&l.email)userMap[l.email]=l.name;});
+    roleMap = {};
+    (data.roleLinks||[]).forEach(l=>{if(l&&l.email&&l.role)roleMap[l.email]=l.role;});
+    applyRoleToUI();
     nextId = data.nextId || tasks.reduce((m,t)=>Math.max(m,Number(t.id)||0),0)+1;
     populateFilters(); render();
     if(document.getElementById('usersOverlay').style.display!=='none') renderUsers();
@@ -569,7 +602,7 @@ const STATUS_CLASS = {todo:"s-todo","in-progress":"s-progress",review:"s-review"
 const STATUS_LABEL = {todo:"To Do","in-progress":"In Progress",review:"In Review",done:"Done"};
 
 // ─── State ────────────────────────────────────────────────────────────────────
-let tasks=[], users=[], userMap={}, currentUserEmail='', nextId=1, currentView='list';
+let tasks=[], users=[], userMap={}, roleMap={}, currentUserEmail='', currentRole='member', nextId=1, currentView='list';
 const TODAY=(()=>{const d=new Date();const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return`${y}-${m}-${day}`;})();
 let weekStart=getWeekStart(new Date());
 let monthDate=new Date(new Date().getFullYear(),new Date().getMonth(),1);
@@ -601,13 +634,46 @@ function setStatus(type,msg){
 // ─── Load / Save ──────────────────────────────────────────────────────────────
 function loadTasks(){ startRealtimeSync(); }
 
+// ─── Roles / access ─────────────────────────────────────────────────────────────
+// The owner account is always an admin and can never be demoted. Every other account
+// uses the role an admin has explicitly assigned; anyone without one defaults to
+// member. This guarantees only an admin can ever change account levels — a non-admin
+// can neither open the Users panel nor change their own level.
+const OWNER_EMAIL='panupong.phiautomation@gmail.com';
+function roleFor(email){
+  if((email||'').toLowerCase()===OWNER_EMAIL) return 'admin';
+  return roleMap[email] || 'member';
+}
+function canManageUsers(){ return currentRole==='admin'; }
+function canManageTasks(){ return currentRole==='admin'||currentRole==='manager'; }
+function applyRoleToUI(){
+  currentRole = currentUserEmail ? roleFor(currentUserEmail) : 'member';
+  document.body.classList.remove('role-admin','role-manager','role-member');
+  document.body.classList.add('role-'+currentRole);
+  if(currentRole==='member' && currentView==='workload') setView('list');
+}
+async function setAccountRole(email,role){
+  if(!canManageUsers()){renderUsers();return;}
+  if(email===currentUserEmail||email.toLowerCase()===OWNER_EMAIL){renderUsers();return;}
+  isBusy=true;
+  try{
+    if(role) roleMap[email]=role; else delete roleMap[email];
+    await persist();
+    applyRoleToUI();
+    setStatus('success','Role updated ✓');setTimeout(()=>setStatus(''),1500);
+  }catch(e){setStatus('error','Failed: '+e.message);}
+  finally{isBusy=false;renderUsers();}
+}
+
 async function persist(){
   const userLinks=Object.entries(userMap).map(([email,name])=>({email,name}));
-  await dbSave({tasks, nextId, users, userLinks});
+  const roleLinks=Object.entries(roleMap).map(([email,role])=>({email,role}));
+  await dbSave({tasks, nextId, users, userLinks, roleLinks});
 }
 
 // ─── Views ────────────────────────────────────────────────────────────────────
 function setView(v){
+  if(v==='workload' && currentRole==='member') v='list';
   currentView=v;
   document.querySelectorAll('.vbtn').forEach((b,i)=>b.classList.toggle('active',['list','7day','month','workload'][i]===v));
   render();
@@ -817,8 +883,11 @@ function hideTip(){document.getElementById('tooltip').style.display='none';}
 
 // ─── Modal ────────────────────────────────────────────────────────────────────
 function openModal(id){
+  // Members may only open existing tasks to change status — never create.
+  if(!id && !canManageTasks()) return;
   editId=id||null;
-  document.getElementById('modalTitle').textContent=id?'Edit Task':'Add Task';
+  const statusOnly = !!id && !canManageTasks();
+  document.getElementById('modalTitle').textContent=statusOnly?'Update Status':(id?'Edit Task':'Add Task');
   const t=id?tasks.find(x=>x.id===id):null;
   document.getElementById('mName').value=t?.name||'';
   document.getElementById('mProject').value=t?.project||'';
@@ -828,14 +897,35 @@ function openModal(id){
   document.getElementById('mStart').value=t?.start||'';
   document.getElementById('mEnd').value=t?.end||'';
   document.getElementById('mStatus').value=t?.status||'in-progress';
-  document.getElementById('btnDelete').style.display=id?'block':'none';
+  document.getElementById('btnDelete').style.display=(id&&canManageTasks())?'block':'none';
+  // Lock every field except Status for members.
+  document.querySelector('.modal').classList.toggle('readonly',statusOnly);
+  ['mName','mProject','mProcess','mStart','mEnd','assigneeTextInput'].forEach(fid=>{
+    const el=document.getElementById(fid); if(el) el.disabled=statusOnly;
+  });
+  document.getElementById('btnSave').textContent=statusOnly?'Save Status':'Save Task';
   document.getElementById('modalOverlay').style.display='flex';
-  setTimeout(()=>document.getElementById('mName').focus(),50);
+  setTimeout(()=>document.getElementById(statusOnly?'mStatus':'mName').focus(),50);
 }
 function closeModal(){document.getElementById('modalOverlay').style.display='none';editId=null;}
 function overlayClick(e){if(e.target.id==='modalOverlay')closeModal();}
 
 async function saveTask(){
+  // Members: status-only update on the existing task, ignore any other field.
+  if(!canManageTasks()){
+    if(!editId) return;
+    const i=tasks.findIndex(t=>t.id===editId);
+    if(i<0){closeModal();return;}
+    setBusy(true);
+    try{
+      tasks[i]={...tasks[i],status:document.getElementById('mStatus').value};
+      await persist();
+      closeModal();render();
+      setStatus('success','Status updated ✓');setTimeout(()=>setStatus(''),2000);
+    }catch(e){setStatus('error','Save failed: '+e.message);}
+    finally{setBusy(false);}
+    return;
+  }
   const name=document.getElementById('mName').value.trim();
   const project=document.getElementById('mProject').value.trim();
   const assignees=getTagAssignees();
@@ -859,6 +949,7 @@ async function saveTask(){
 }
 
 async function deleteTask(){
+  if(!canManageTasks())return;
   if(!editId||!confirm('Delete this task?'))return;
   setBusy(true);
   try{
@@ -938,7 +1029,7 @@ document.addEventListener('click',e=>{
 });
 
 // ─── Users page ───────────────────────────────────────────────────────────────
-function openUsers(){document.getElementById('usersOverlay').style.display='flex';renderUsers();}
+function openUsers(){if(!canManageUsers())return;document.getElementById('usersOverlay').style.display='flex';renderUsers();}
 function closeUsers(){document.getElementById('usersOverlay').style.display='none';}
 function closeUsersOutside(e){if(e.target.id==='usersOverlay')closeUsers();}
 
@@ -949,47 +1040,80 @@ function allAssignees(){
 }
 
 function taskCountFor(name){return tasks.filter(t=>getAssignees(t).includes(name)).length;}
+function roleForUser(name){
+  const RANK={admin:3,manager:2,member:1};
+  let best='';
+  Object.entries(userMap).forEach(([email,n])=>{
+    if(n!==name) return;
+    const r=roleFor(email);
+    if(!best||RANK[r]>RANK[best]) best=r;
+  });
+  return best;
+}
+
+function renderAccountsSection(){
+  if(!canManageUsers()) return '';
+  const accounts=[...new Set([...Object.keys(roleMap),...Object.keys(userMap),currentUserEmail].filter(Boolean))]
+    .sort((a,b)=>a.localeCompare(b));
+  if(!accounts.length) return '';
+  const roleOpt=(r,sel)=>`<option value="${r}"${sel===r?' selected':''}>${r[0].toUpperCase()+r.slice(1)}</option>`;
+  return `<div class="accounts-section">
+    <div class="accounts-title">Account access</div>
+    ${accounts.map(email=>{
+      const role=roleFor(email), name=userMap[email]||'';
+      const isOwner=email.toLowerCase()===OWNER_EMAIL, isSelf=email===currentUserEmail;
+      const locked=isOwner||isSelf;
+      return `<div class="account-row">
+        <div class="account-email">${esc(email)}${isSelf?'<span class="you-tag">you</span>':''}${isOwner?'<span class="you-tag">owner</span>':''}${name?`<div class="account-link">→ ${esc(name)}</div>`:''}</div>
+        <select class="account-role-sel" ${locked?'disabled title="You cannot change your own level"':''} onchange="setAccountRole('${esc(email)}',this.value)">
+          ${roleOpt('admin',role)}${roleOpt('manager',role)}${roleOpt('member',role)}
+        </select>
+      </div>`;
+    }).join('')}
+  </div>`;
+}
 
 function renderUsers(){
   const list=allAssignees();
   const el=document.getElementById('usersList');
-  if(!list.length){el.innerHTML='<div class="users-empty">No users yet. Add one above.</div>';return;}
+  const accountsHtml=renderAccountsSection();
+  if(!list.length){el.innerHTML=accountsHtml+'<div class="users-empty">No users yet. Add one above.</div>';return;}
   const emailsByName={};
   Object.entries(userMap).forEach(([email,n])=>{(emailsByName[n]=emailsByName[n]||[]).push(email);});
-  el.innerHTML=list.map(name=>{
+  el.innerHTML=accountsHtml+list.map(name=>{
     const count=taskCountFor(name);
     const emails=emailsByName[name]||[];
-    return`<div class="user-card" id="ucard-${CSS.escape(name)}">
+    const clickable=canManageUsers();
+    const role=roleForUser(name);
+    return`<div class="user-card${clickable?' user-card-clickable':''}" id="ucard-${CSS.escape(name)}"${clickable?` onclick="startEditUser('${esc(name)}')"`:''}>
       <div class="avatar" style="background:${aColor(name)}">${initials(name)}</div>
       <div class="user-info">
-        <div class="user-name">${esc(name)}</div>
+        <div class="user-name">${esc(name)}${role?`<span class="role-badge role-${role}">${role[0].toUpperCase()+role.slice(1)}</span>`:''}</div>
         <div class="user-tasks">${count} task${count!==1?'s':''}</div>
         ${emails.map(e=>`<div class="user-email-tag">${esc(e)}</div>`).join('')}
-      </div>
-      <div class="user-actions">
-        <button class="user-edit-btn" onclick="startEditUser('${esc(name)}')">✏️ Edit</button>
-        <button class="user-del-btn" onclick="deleteUser('${esc(name)}')">🗑</button>
       </div>
     </div>`;
   }).join('');
 }
 
 function startEditUser(name){
+  if(!canManageUsers())return;
   const card=document.getElementById('usersList').querySelector(`[id="ucard-${CSS.escape(name)}"]`);
   if(!card)return;
-  const actionsEl=card.querySelector('.user-actions');
+  if(card.querySelector('#editUserInput'))return;
   const infoEl=card.querySelector('.user-info');
-  actionsEl.style.display='none';
   infoEl.innerHTML=`<div class="user-edit-row">
-    <input class="user-edit-input" id="editUserInput" value="${esc(name)}" onkeydown="if(event.key==='Enter')saveEditUser('${esc(name)}');if(event.key==='Escape')renderUsers()">
-    <button class="user-save-btn" onclick="saveEditUser('${esc(name)}')">Save</button>
-    <button class="user-cancel-btn" onclick="renderUsers()">Cancel</button>
+    <input class="user-edit-input" id="editUserInput" value="${esc(name)}" onclick="event.stopPropagation()" onkeydown="if(event.key==='Enter')saveEditUser('${esc(name)}');if(event.key==='Escape')renderUsers()">
+    <button class="user-save-btn" onclick="event.stopPropagation();saveEditUser('${esc(name)}')">Save</button>
+    <button class="user-cancel-btn" onclick="event.stopPropagation();renderUsers()">Cancel</button>
+    <button class="user-del-btn" onclick="event.stopPropagation();deleteUser('${esc(name)}')">🗑</button>
   </div>`;
   document.getElementById('editUserInput').focus();
   document.getElementById('editUserInput').select();
 }
 
 async function saveEditUser(oldName){
+  if(!canManageUsers())return;
   const newName=document.getElementById('editUserInput')?.value.trim();
   if(!newName||newName===oldName){renderUsers();return;}
   isBusy=true;
@@ -1009,6 +1133,7 @@ async function saveEditUser(oldName){
 }
 
 async function addUser(){
+  if(!canManageUsers())return;
   const input=document.getElementById('newUserInput');
   const name=input.value.trim();
   if(!name)return;
@@ -1024,6 +1149,7 @@ async function addUser(){
 }
 
 async function deleteUser(name){
+  if(!canManageUsers())return;
   const count=taskCountFor(name);
   const msg=count>0?`"${name}" is assigned to ${count} task${count>1?'s':''}. Remove them from all tasks and delete?`:`Delete user "${name}"?`;
   if(!confirm(msg))return;
@@ -1081,7 +1207,9 @@ _auth.onAuthStateChanged(user=>{
   } else {
     document.body.classList.add('logged-out');
     currentUserEmail='';
-    tasks=[];users=[];userMap={};render();
+    tasks=[];users=[];userMap={};roleMap={};
+    document.getElementById('usersOverlay').style.display='none';
+    applyRoleToUI();render();
   }
 });
 </script>
