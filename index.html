@@ -98,6 +98,7 @@ body.dark .logo img{background:#fff;padding:3px 6px}
 .wdh.is-today .d-num{background:#4f46e5;color:#fff}
 .week-body{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}
 .week-day-mobile-head{display:none}
+.filter-toggle-btn{display:none}
 .week-day-col{border-right:1px solid var(--border);padding:6px;min-height:140px}
 .week-day-col:last-child{border-right:none}
 .week-day-col.is-today{background:var(--today-bg)}
@@ -244,9 +245,16 @@ body.dark .af-item.selected{background:#2e1f6e}
   .vbtn{flex:1;padding:6px 4px;font-size:11px}
   .btn-add{padding:7px 12px;font-size:12px}
   .main{padding:10px}
-  .filters{padding:8px 10px;gap:6px;top:0;position:static}
-  .fsel,.assignee-filter-toggle{font-size:12px;padding:6px 24px 6px 8px;min-width:0}
+  .filter-toggle-btn{display:inline-flex;align-items:center;gap:4px;padding:7px 11px;background:var(--surface);border:1px solid var(--border);border-radius:8px;font-size:13px;color:var(--text);cursor:pointer;font-family:inherit}
+  .filter-toggle-btn.has-active{border-color:#4f46e5;background:#ede9fe;color:#4f46e5}
+  body.dark .filter-toggle-btn.has-active{background:#2e1f6e;color:#a78bfa}
+  #filterToggleCount:not(:empty){background:#4f46e5;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:9px;min-width:16px;text-align:center}
+  .filters{display:none;padding:10px;gap:8px;top:0;position:static;flex-direction:column;align-items:stretch;border-bottom:1px solid var(--border)}
+  body.filters-open .filters{display:flex}
+  .filters .fl{display:none}
+  .filters .fsel,.filters .assignee-filter-toggle{width:100%;font-size:13px;padding:9px 28px 9px 12px}
   .filter-sep{display:none}
+  .refresh-btn{width:100%;padding:9px 12px}
   /* List → card layout */
   .list-wrap{background:transparent;border:none;box-shadow:none;border-radius:0;overflow:visible;display:flex;flex-direction:column;gap:10px}
   .list-head{display:none}
@@ -342,6 +350,7 @@ body.dark .login-logo{background:#fff;padding:4px 8px}
     <button class="vbtn" onclick="setView('workload')">👤 Workload</button>
   </div>
   <button class="btn-add" id="btnAdd" onclick="openModal()">＋ Add Task</button>
+  <button class="filter-toggle-btn" id="filterToggleBtn" onclick="toggleMobileFilters()" title="Filters">🔍 <span id="filterToggleCount"></span></button>
   <button class="users-btn" onclick="openUsers()" title="Manage Users">👥</button>
   <button class="gear-btn" onclick="openSettings()" title="Settings">⚙️</button>
   <div id="userInfo" style="position:relative">
@@ -575,7 +584,19 @@ function applyFilters(){
   filters.project=document.getElementById('fProject').value;
   filters.process=document.getElementById('fProcess').value;
   filters.status=document.getElementById('fStatus').value;
+  updateFilterToggle();
   render();
+}
+function toggleMobileFilters(){
+  document.body.classList.toggle('filters-open');
+}
+function updateFilterToggle(){
+  const btn=document.getElementById('filterToggleBtn');
+  const cnt=document.getElementById('filterToggleCount');
+  if(!btn||!cnt) return;
+  const n=(filters.project?1:0)+(filters.process?1:0)+(filters.status?1:0)+(filters.assignees.length?1:0);
+  cnt.textContent=n?n:'';
+  btn.classList.toggle('has-active',n>0);
 }
 function populateFilters(){
   const P=[...new Set(tasks.map(t=>t.project))].sort();
@@ -872,12 +893,12 @@ function toggleAssigneeDropdown(){
 function toggleAssigneeFilter(name){
   const i=filters.assignees.indexOf(name);
   if(i>-1) filters.assignees.splice(i,1); else filters.assignees.push(name);
-  populateFilters(); render();
+  populateFilters(); updateFilterToggle(); render();
 }
 function clearAssigneeFilter(){
   filters.assignees=[];
   document.getElementById('assigneeFilterDropdown').style.display='none';
-  populateFilters(); render();
+  populateFilters(); updateFilterToggle(); render();
 }
 document.addEventListener('click',e=>{
   const wrap=document.getElementById('assigneeFilterWrap');
