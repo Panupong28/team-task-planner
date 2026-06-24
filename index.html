@@ -323,7 +323,14 @@ body.dark .login-logo{background:#fff;padding:4px 8px}
 .user-menu-info{padding:14px 16px;border-bottom:1px solid var(--border)}
 .user-menu-name{font-weight:600;font-size:14px;margin-bottom:2px}
 .user-menu-email{font-size:12px;color:var(--text2)}
+.user-menu-link{padding:12px 16px;border-bottom:1px solid var(--border)}
+.user-menu-link label{display:block;font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.user-menu-link select{width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:6px;background:var(--input-bg);color:var(--input-color);font-size:13px;font-family:inherit;cursor:pointer}
+.user-menu-link select:focus{outline:none;border-color:#4f46e5}
+.user-menu-link .linked-hint{font-size:11px;color:var(--text3);margin-top:6px}
 .user-menu-btn{width:100%;padding:11px 16px;text-align:left;border:none;background:none;color:var(--text);font-size:14px;cursor:pointer;display:block;font-family:inherit}
+.user-email-tag{font-size:11px;color:var(--text3);margin-top:2px;display:flex;align-items:center;gap:4px}
+.user-email-tag::before{content:"✉";font-size:10px}
 .user-menu-btn:hover{background:var(--row-hover)}
 </style>
 </head>
@@ -360,6 +367,7 @@ body.dark .login-logo{background:#fff;padding:4px 8px}
         <div class="user-menu-name" id="userMenuName"></div>
         <div class="user-menu-email" id="userMenuEmail"></div>
       </div>
+      <div class="user-menu-link" id="userMenuLink"></div>
       <button class="user-menu-btn" onclick="signOutUser()">Sign out</button>
     </div>
   </div>
@@ -480,9 +488,37 @@ function signOutUser(){
   document.getElementById('userMenu').style.display='none';
   _auth.signOut();
 }
+function renderUserMenuLink(){
+  const wrap=document.getElementById('userMenuLink');
+  if(!wrap) return;
+  if(!currentUserEmail){wrap.innerHTML='';return;}
+  const linked=userMap[currentUserEmail]||'';
+  const list=allAssignees();
+  wrap.innerHTML=`<label>Linked to assignee</label>
+    <select id="userLinkSelect" onchange="setUserLink(this.value)">
+      <option value="">— None —</option>
+      ${list.map(u=>`<option value="${esc(u)}"${u===linked?' selected':''}>${esc(u)}</option>`).join('')}
+    </select>
+    ${linked?`<div class="linked-hint">Tasks assigned to <strong>${esc(linked)}</strong> are yours.</div>`:'<div class="linked-hint">Pick which assignee this account is.</div>'}`;
+}
+async function setUserLink(name){
+  if(!currentUserEmail) return;
+  isBusy=true;
+  try{
+    if(name) userMap[currentUserEmail]=name;
+    else delete userMap[currentUserEmail];
+    await persist();
+    setStatus('success',name?`Linked as ${name}`:'Unlinked');setTimeout(()=>setStatus(''),1500);
+    renderUserMenuLink();
+    if(document.getElementById('usersOverlay').style.display!=='none') renderUsers();
+  }catch(e){setStatus('error','Failed: '+e.message);}
+  finally{isBusy=false;}
+}
 function toggleUserMenu(){
   const m=document.getElementById('userMenu');
-  m.style.display=m.style.display==='none'?'block':'none';
+  const willOpen=m.style.display==='none';
+  m.style.display=willOpen?'block':'none';
+  if(willOpen) renderUserMenuLink();
 }
 document.addEventListener('click',e=>{
   const info=document.getElementById('userInfo');
@@ -495,12 +531,14 @@ async function dbSave(data){
 function startRealtimeSync(){
   _db.ref('data').on('value', snap=>{
     if(isBusy) return;
-    const data = snap.val() || {tasks:[], nextId:1, users:[]};
+    const data = snap.val() || {tasks:[], nextId:1, users:[], userMap:{}};
     tasks = data.tasks || [];
     users = data.users || [];
+    userMap = data.userMap || {};
     nextId = data.nextId || tasks.reduce((m,t)=>Math.max(m,Number(t.id)||0),0)+1;
     populateFilters(); render();
     if(document.getElementById('usersOverlay').style.display!=='none') renderUsers();
+    renderUserMenuLink();
     setStatus('success','Synced');setTimeout(()=>setStatus(''),1500);
   }, e=>setStatus('error','Sync error: '+e.message));
 }
@@ -526,7 +564,7 @@ const STATUS_CLASS = {todo:"s-todo","in-progress":"s-progress",review:"s-review"
 const STATUS_LABEL = {todo:"To Do","in-progress":"In Progress",review:"In Review",done:"Done"};
 
 // ─── State ────────────────────────────────────────────────────────────────────
-let tasks=[], users=[], nextId=1, currentView='list';
+let tasks=[], users=[], userMap={}, currentUserEmail='', nextId=1, currentView='list';
 const TODAY=(()=>{const d=new Date();const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return`${y}-${m}-${day}`;})();
 let weekStart=getWeekStart(new Date());
 let monthDate=new Date(new Date().getFullYear(),new Date().getMonth(),1);
@@ -559,7 +597,7 @@ function setStatus(type,msg){
 function loadTasks(){ startRealtimeSync(); }
 
 async function persist(){
-  await dbSave({tasks, nextId, users});
+  await dbSave({tasks, nextId, users, userMap});
 }
 
 // ─── Views ────────────────────────────────────────────────────────────────────
@@ -910,13 +948,17 @@ function renderUsers(){
   const list=allAssignees();
   const el=document.getElementById('usersList');
   if(!list.length){el.innerHTML='<div class="users-empty">No users yet. Add one above.</div>';return;}
+  const emailsByName={};
+  Object.entries(userMap).forEach(([email,n])=>{(emailsByName[n]=emailsByName[n]||[]).push(email);});
   el.innerHTML=list.map(name=>{
     const count=taskCountFor(name);
+    const emails=emailsByName[name]||[];
     return`<div class="user-card" id="ucard-${CSS.escape(name)}">
       <div class="avatar" style="background:${aColor(name)}">${initials(name)}</div>
       <div class="user-info">
         <div class="user-name">${esc(name)}</div>
         <div class="user-tasks">${count} task${count!==1?'s':''}</div>
+        ${emails.map(e=>`<div class="user-email-tag">${esc(e)}</div>`).join('')}
       </div>
       <div class="user-actions">
         <button class="user-edit-btn" onclick="startEditUser('${esc(name)}')">✏️ Edit</button>
@@ -953,6 +995,7 @@ async function saveEditUser(oldName){
       if(!a.includes(oldName))return t;
       return{...t,assignees:a.map(n=>n===oldName?newName:n)};
     });
+    Object.keys(userMap).forEach(e=>{if(userMap[e]===oldName)userMap[e]=newName;});
     await persist();
     setStatus('success','User renamed ✓');setTimeout(()=>setStatus(''),2000);
   }catch(e){setStatus('error','Failed: '+e.message);}
@@ -986,6 +1029,7 @@ async function deleteUser(name){
       if(!a.includes(name))return t;
       return{...t,assignees:a.filter(n=>n!==name)};
     });
+    Object.keys(userMap).forEach(e=>{if(userMap[e]===name)delete userMap[e];});
     await persist();
     setStatus('success','User deleted ✓');setTimeout(()=>setStatus(''),2000);
   }catch(e){setStatus('error','Failed: '+e.message);}
@@ -1017,6 +1061,7 @@ applyStoredTheme();
 _auth.onAuthStateChanged(user=>{
   if(user){
     document.body.classList.remove('logged-out');
+    currentUserEmail=user.email||'';
     const av=document.getElementById('userAvatarEl');
     if(user.photoURL){
       av.innerHTML=`<img src="${user.photoURL}" class="user-avatar" referrerpolicy="no-referrer">`;
@@ -1029,7 +1074,8 @@ _auth.onAuthStateChanged(user=>{
     loadTasks();
   } else {
     document.body.classList.add('logged-out');
-    tasks=[];users=[];render();
+    currentUserEmail='';
+    tasks=[];users=[];userMap={};render();
   }
 });
 </script>
